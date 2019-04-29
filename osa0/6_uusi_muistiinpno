@@ -1,0 +1,18 @@
+note over selain:
+selain lähettää HTTP POST -pyynnön
+palvelimen osoitteeseen new_note_spa,
+mukana on JSON-muotoinen data
+end note
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+note over palvelin:
+Palvelin vastaa pyyntöön HTTP-
+statuskoodilla 201 ceated, eikä pyydä
+uudelleenohjausta
+end note
+palvelin-->selain: HTML status 201 created 
+
+note over selain:
+selaimen lataama Javascript-
+koodi hoitaa datan lähettämisen
+tapahtumankäsittelijän avulla
+end note

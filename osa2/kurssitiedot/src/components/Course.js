@@ -51,8 +51,6 @@ const Course = ({course}) => {
 }
 
 const Courses = ({courses}) => {
-    console.log(courses)
-    
     const rows = () => courses.map(course =>
         <Course
             key={course.id}

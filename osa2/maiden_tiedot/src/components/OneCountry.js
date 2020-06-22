@@ -3,25 +3,38 @@ import axios from 'axios'
 import Language from './Language'
 
 const OneCountry = ({values,languages}) => {
-
-    const [ capitalWeather, setCapitalWeather ] = useState('')
+    
+    const [ weather, setWeather ] = useState({})
 
     useEffect(() => {
         if (values.capital !== '') {
+            const params = {
+                access_key: process.env.REACT_APP_API_KEY,
+                query: values.capital,
+                units: 'm'
+             }
             axios
-                .get('https://api.apixu.com/v1/current.json?key=7a1ec02eb69b4671aa992918190706&q='+values.capital)
+                .get('http://api.weatherstack.com/current', {params})
                 .then(response => {
-                    setCapitalWeather(response.data.current)
-                   })
+                    return (
+                        setWeather({
+                            temperature: response.data.current.temperature,
+                            icon: response.data.current.weather_icons,
+                            wind_speed: response.data.current.wind_speed,
+                            wind_dir: response.data.current.wind_dir
+                        })
+
+                    )
+                })
         }
     }, [values.capital])
 
     return (
-        <>
+        <div>
             <h1>{values.name}</h1>
             <div>capital {values.capital}</div>
             <div>population {values.population}</div>
-            <h3>languages</h3>
+            <h2>languages</h2>
             <div>
                 {languages.map(language =>
                     <Language name={language.name} key={language.name} />
@@ -33,11 +46,11 @@ const OneCountry = ({values,languages}) => {
                 alt="Country Flag"
                 style={{width: 100}}
             />
-            <h3>Weather in {values.capital}</h3>
-            <div>Temperature: {capitalWeather.temp_c}</div>
-            { capitalWeather.condition && <img src={capitalWeather.condition.icon} alt=""/> }
-            <div>Wind: {capitalWeather.wind_kph} kph {capitalWeather.wind_dir} </div>
-        </>
+            <h2>Weather in {values.capital}</h2>
+            <div>Temperature: {weather.temperature}&#8451;</div>
+            { weather.weather_descriptions && <img src={weather.icon} alt=""/> }
+            <div>Wind: {weather.wind_speed} kph {weather.wind_dir} </div>
+        </div>
     )
 }
 

@@ -6,6 +6,8 @@ import Person from './components/Person'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import Footer from './components/Footer'
+
 
 const App = () => {
     const [ persons, setPersons ] = useState([])
@@ -20,6 +22,7 @@ const App = () => {
         personService
             .getAll()
             .then(initialPersons => {
+                console.log(initialPersons)
                 setPersons(initialPersons)
             })
     }, [])
@@ -174,6 +177,7 @@ const App = () => {
             />
             <h2>Numbers</h2>
             <Persons rows={rows()}/>
+            <Footer />
         </div>
         </>
     )

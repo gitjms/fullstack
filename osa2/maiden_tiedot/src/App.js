@@ -35,7 +35,7 @@ const App = () => {
     }
 
     return (
-        <>
+        <div>
             <Filter
                 setCountryToFind={setCountryToFind}
                 countryToFind={countryToFind}
@@ -48,7 +48,7 @@ const App = () => {
                 countryToFind={countryToFind}   
                 setCountries={setCountries} 
             />
-        </>
+        </div>
     )
 }
 

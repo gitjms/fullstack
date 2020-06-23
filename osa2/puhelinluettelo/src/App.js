@@ -68,9 +68,9 @@ const App = () => {
     
         const mapNames = persons.map(person => person.name.toLowerCase())
         
-        // if (mapNames.includes(nameObject.name.toLowerCase())) {
-        //     replaceNumberOf(nameObject)
-        // } else {
+        if (mapNames.includes(nameObject.name.toLowerCase())) {
+            replaceNumberOf(nameObject)
+        } else {
         if (!mapNames.includes(nameObject.name.toLowerCase())) {
             personService
             .create(nameObject)

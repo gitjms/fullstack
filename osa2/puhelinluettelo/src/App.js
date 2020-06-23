@@ -65,35 +65,34 @@ const App = () => {
             name: newName,
             number: newNumber,
         }
+    }
     
-        const mapNames = persons.map(person => person.name.toLowerCase())
+    const mapNames = persons.map(person => person.name.toLowerCase())
         
-        if (mapNames.includes(nameObject.name.toLowerCase())) {
-            replaceNumberOf(nameObject)
-        } else {
-        if (!mapNames.includes(nameObject.name.toLowerCase())) {
-            personService
-            .create(nameObject)
-            .then(returnedPerson => {
-                setPersons(persons.concat(returnedPerson))
-                setNewName('')
-                setNewNumber('')
-                setMessage(
-                    `Added ${nameObject.name}`
-                )
-                setTimeout(() => {
-                    setMessage(null)
-                }, 4000)
-            })
-            .catch(error => {
-                setErrorMessage(
-                    `Something went wrong...`
-                )
-                setTimeout(() => {
-                    setErrorMessage(null)
-                }, 4000)
-            })
-        }
+    if (mapNames.includes(nameObject.name.toLowerCase())) {
+        replaceNumberOf(nameObject)
+    } else {
+        personService
+        .create(nameObject)
+        .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+            setNewName('')
+            setNewNumber('')
+            setMessage(
+                `Added ${nameObject.name}`
+            )
+            setTimeout(() => {
+                setMessage(null)
+            }, 4000)
+        })
+        .catch(error => {
+            setErrorMessage(
+                `Something went wrong...`
+            )
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 4000)
+        })
     }
 
     const replaceNumberOf = (personNumber) => {

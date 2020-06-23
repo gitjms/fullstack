@@ -4,8 +4,8 @@ const Filter = ({setNameToFind,nameToFind,handleFindNameChange}) => {
     return (
         <form onChange={setNameToFind}>
             <div align="left">
-                <label for="filter">filter shown with:</label>
-                <input id="filter" type="text" class="form-control"
+                <label htmlFor="filter">filter shown with:</label>
+                <input id="filter" type="text" className="form-control"
                     value={nameToFind}
                     onChange={handleFindNameChange}
                 />

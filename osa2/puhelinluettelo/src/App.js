@@ -161,7 +161,7 @@ const App = () => {
         <>
         <div>
             <h1 >Phonebook</h1>
-            <div class="col-auto">
+            <div className="col-auto">
                 <Filter 
                     setNameToFind={setNameToFind}
                     nameToFind={nameToFind}
@@ -171,7 +171,7 @@ const App = () => {
                 <Message message={message} />
                 <ErrorMessage message={errorMessage} />
             <br />
-            <div class="col-auto">
+            <div className="col-auto">
                 <b>Add new contact</b>
                 <PersonForm
                     addPerson={addPerson}
@@ -182,7 +182,7 @@ const App = () => {
                 />
             </div>
             <br />
-            <div class="col-auto">
+            <div className="col-auto">
                 <b>Contacts</b>
                 <Persons rows={rows()}/>
                 <Footer />

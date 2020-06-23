@@ -68,9 +68,10 @@ const App = () => {
     
         const mapNames = persons.map(person => person.name.toLowerCase())
         
-        if (mapNames.includes(nameObject.name.toLowerCase())) {
-            replaceNumberOf(nameObject)
-        } else {
+        // if (mapNames.includes(nameObject.name.toLowerCase())) {
+        //     replaceNumberOf(nameObject)
+        // } else {
+        if (!mapNames.includes(nameObject.name.toLowerCase())) {
             personService
             .create(nameObject)
             .then(returnedPerson => {
@@ -160,24 +161,32 @@ const App = () => {
         <>
         <div>
             <h1 >Phonebook</h1>
-            <Filter 
-                setNameToFind={setNameToFind}
-                nameToFind={nameToFind}
-                handleFindNameChange={handleFindNameChange}
-            />
-            <Message message={message} />
-            <ErrorMessage message={errorMessage} />
-            <h2>Add new</h2>
-            <PersonForm
-                addPerson={addPerson}
-                newName={newName}
-                handleNameChange={handleNameChange}
-                newNumber={newNumber}
-                handleNumberChange={handleNumberChange}
-            />
-            <h2>Numbers</h2>
-            <Persons rows={rows()}/>
-            <Footer />
+            <div class="col-auto">
+                <Filter 
+                    setNameToFind={setNameToFind}
+                    nameToFind={nameToFind}
+                    handleFindNameChange={handleFindNameChange}
+                />
+            </div>
+                <Message message={message} />
+                <ErrorMessage message={errorMessage} />
+            <br />
+            <div class="col-auto">
+                <b>Add new contact</b>
+                <PersonForm
+                    addPerson={addPerson}
+                    newName={newName}
+                    handleNameChange={handleNameChange}
+                    newNumber={newNumber}
+                    handleNumberChange={handleNumberChange}
+                />
+            </div>
+            <br />
+            <div class="col-auto">
+                <b>Contacts</b>
+                <Persons rows={rows()}/>
+                <Footer />
+            </div>
         </div>
         </>
     )

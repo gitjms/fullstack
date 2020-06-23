@@ -3,16 +3,17 @@ h1 {
   margin-left: 5px;
 }
 
-h2 {
-  margin-left: 10px;
-}
-
 form {
   margin-left: 10px;
 }
 
-input {
-  margin-left: 5px;
+li {
+  height: 60px;
+  text-align: center;
+}
+
+#listbtn {
+  float: right;
 }
 
 body {

@@ -1,5 +1,5 @@
 {
-  "name": "puhelinluettelo",
+  "name": "phonebook",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -35,5 +35,5 @@
     ]
   },
   "author": "Jari Sunnari",
-  "proxy": "http://localhost:3000"
+  "proxy": "http://localhost:3001"
 }

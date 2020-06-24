@@ -11,6 +11,12 @@ li {
   text-align: center;
 }
 
+strong {
+  float: left;
+  font-size: 25px;
+  text-align: left;
+}
+
 #listbtn {
   float: right;
 }

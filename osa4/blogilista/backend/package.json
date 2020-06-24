@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gitjms/fullstack/osa4.git"
+  },
+  "author": "Jari Sunnari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gitjms/fullstack/osa4.git/issues"
+  },
+  "homepage": "https://github.com/gitjms/fullstack/osa4.git#readme",
+  "proxy": "http://localhost:3001"
+}

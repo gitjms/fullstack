@@ -1,0 +1,11 @@
+puhelinluettelo
+
+Avaa ensin JSON-server:
+1. git bash:
+$ npm run server
+-> http://localhost:3001/persons
+
+Avaa sitten vasta React-sovellus:
+2. git bash:
+$ npm start
+-> http://localhost:3000/

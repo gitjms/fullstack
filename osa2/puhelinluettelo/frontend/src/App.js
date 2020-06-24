@@ -157,8 +157,14 @@ const App = () => {
   }
 
   return (
-  <div className='container'>
-    <br />
+  <>
+	  <nav id='nav' class='navbar navbar-light bg-light'>
+      <img src='https://img.icons8.com/fluent/48/000000/phone-contact.png' width='30' height='30' class='d-inline-block align-top' alt=''/>
+      <strong>Phonebook</strong>
+      <a role='button' class='btn btn-outline-primary' href='/info'>Info</a>
+    </nav>
+    <div className='container'>
+      <br />
       <div className='col-auto'>
         <Filter 
           setNameToFind={setNameToFind}
@@ -166,8 +172,8 @@ const App = () => {
           handleFindNameChange={handleFindNameChange}
         />
       </div>
-        <Message message={message} />
-        <ErrorMessage message={errorMessage} />
+      <Message message={message} />
+      <ErrorMessage message={errorMessage} />
       <br />
       <div className='col-auto'>
         <b>Add new contact</b>
@@ -185,7 +191,8 @@ const App = () => {
         <Persons rows={rows()}/>
       </div>
     <Footer />
-  </div>
+    </div>
+  </>
   )
 }
 

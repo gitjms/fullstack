@@ -73,8 +73,8 @@ const App = () => {
         } else {
             personService
             .create(nameObject)
-            .then(returnedPerson => {
-                setPersons(persons.concat(returnedPerson))
+            .then(createdPerson => {
+                setPersons(persons.concat(createdPerson))
                 setNewName('')
                 setNewNumber('')
                 setMessage(
@@ -86,7 +86,7 @@ const App = () => {
             })
             .catch(error => {
                 setErrorMessage(
-                    `Something went wrong...`
+                    console.log(error.response.data)
                 )
                 setTimeout(() => {
                     setErrorMessage(null)
@@ -156,10 +156,9 @@ const App = () => {
          }
     }
 
-    return (
-        <>
+  return (
+    <div>
         <br />
-        <div>
             <div className="col-auto">
                 <Filter 
                     setNameToFind={setNameToFind}
@@ -184,10 +183,9 @@ const App = () => {
             <div className="col-auto">
                 <b>Contacts</b>
                 <Persons rows={rows()}/>
-                <Footer />
             </div>
-        </div>
-        </>
+        <Footer />
+    </div>
     )
 }
 

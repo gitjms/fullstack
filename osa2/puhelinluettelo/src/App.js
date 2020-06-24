@@ -157,7 +157,7 @@ const App = () => {
   }
 
   return (
-  <div>
+  <div className='container'>
     <br />
       <div className='col-auto'>
         <Filter 

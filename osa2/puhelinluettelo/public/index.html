@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta charset="utf-8" />
-<!--
+
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
--->
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
 
@@ -14,9 +14,9 @@
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-<!--
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
--->
+
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -30,6 +30,14 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="%PUBLIC_URL%/api/persons">
+        <img src="https://img.icons8.com/fluent/48/000000/phone-contact.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        Phonebook
+      </a>
+      <a class="nav-link" href="/info">Info</a>
+
+    </nav>
     <div class="container">
       <div id="root">
       </div>

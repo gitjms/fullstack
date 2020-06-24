@@ -20,7 +20,7 @@ const update = async (id, newObject) => {
     return response.data
 }
 
-const remove = async (id) => {
+const remove = async id => {
     const request = axios.delete(`${baseUrl}/${id}`)
     const response = await request
     return response.data

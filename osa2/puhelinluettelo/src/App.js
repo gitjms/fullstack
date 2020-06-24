@@ -158,8 +158,8 @@ const App = () => {
 
     return (
         <>
+        <br />
         <div>
-            <h1 >Phonebook</h1>
             <div className="col-auto">
                 <Filter 
                     setNameToFind={setNameToFind}

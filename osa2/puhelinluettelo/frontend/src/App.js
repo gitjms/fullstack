@@ -46,16 +46,17 @@ const App = () => {
     }
   }
 
+  let data = []
   const personsToShow = showAll
-    ? persons
+    ? data = Array.from(persons)
     : persons.filter(person => person.name.toLowerCase().includes(nameToFind.toLowerCase()))
 
-  const rows = () => personsToShow(values =>
+  const rows = () => personsToShow.map(data =>
     <Person
-      key={values.name}
-      values={values}
-      deletePerson={() => deletePersonOf(values.id)}
-      replaceNumber={() => replaceNumberOf(values.name,values.number)}
+      key={data.name}
+      values={data}
+      deletePerson={() => deletePersonOf(data.id)}
+      replaceNumber={() => replaceNumberOf(data.name,data.number)}
     />
   )
 
@@ -159,7 +160,7 @@ const App = () => {
   return (
   <>
 	  <nav id='nav' class='navbar navbar-light bg-light'>
-      <img src='https://img.icons8.com/fluent/48/000000/phone-contact.png' width='30' height='30' class='d-inline-block align-top' alt=''/>
+      <img src='/logo.png' width='50' height='35' class='d-inline-block align-top' alt=''/>
       <strong>Phonebook</strong>
       <a role='button' class='btn btn-outline-primary' href='/info'>Info</a>
     </nav>

@@ -14,8 +14,6 @@ const Footer = () => {
       <em>Phonebook app, Full Stack Web Development</em>
       <br />
       <em>University of Helsinki 2020</em>
-      <br />
-      <a href='https://icons8.com/icon/aggz2cCtJYrP/phone-contact'>Phone Contact icon by Icons8</a>
       </center>
     </div>
   )

@@ -50,7 +50,7 @@ const App = () => {
     ? persons
     : persons.filter(person => person.name.toLowerCase().includes(nameToFind.toLowerCase()))
 
-  const rows = () => personsToShow.map(values =>
+  const rows = () => personsToShow(values =>
     <Person
       key={values.name}
       values={values}

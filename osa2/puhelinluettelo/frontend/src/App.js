@@ -163,7 +163,7 @@ const App = () => {
 	  <nav id='nav' className='navbar navbar-light bg-light'>
       <img src='/logo.png' width='50' height='35' className='d-inline-block align-top' alt=''/>
       <strong>Phonebook</strong>
-      <a role='button' className='btn btn-outline-primary' href='/info'>Info</a>
+      <a role='button' className='btn btn-outline-primary' href='info'>Info</a>
     </nav>
     <div className='container'>
       <br />

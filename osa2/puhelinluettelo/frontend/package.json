@@ -34,6 +34,9 @@
       "last 1 safari version"
     ]
   },
+  "devDependencies": {
+    "json-server": "^0.15.1"
+  },
   "author": "Jari Sunnari",
   "proxy": "http://localhost:3001"
 }

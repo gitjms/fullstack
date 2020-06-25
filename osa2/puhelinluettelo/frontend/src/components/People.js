@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-const Persons = ({rows}) => {
+const People = ({rows}) => {
 
     return (
         <div style={{lineHeight: 0}} >
@@ -10,4 +10,4 @@ const Persons = ({rows}) => {
     )
 }
 
-export default Persons
+export default People

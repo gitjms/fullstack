@@ -1,16 +1,15 @@
 import React, {useState, useEffect} from 'react'
 import ErrorMessage from './components/ErrorMessage'
 import Message from './components/Message'
-import personService from './services/persons'
+import peopleService from './services/people'
 import Person from './components/Person'
-import Persons from './components/Persons'
+import People from './components/People'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Footer from './components/Footer'
 
-
 const App = () => {
-  const [ persons, setPersons ] = useState([])
+  const [ people, setPeople ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ showAll, setShowAll ] = useState(true)
@@ -19,11 +18,11 @@ const App = () => {
   const [ message, setMessage ] = useState(null)
 
   useEffect(() => {
-    personService
+    peopleService
       .getAll()
-      .then(initialPersons => {
-        console.log(initialPersons)
-        setPersons(initialPersons)
+      .then(initialPeople => {
+        console.log(initialPeople)
+        setPeople(initialPeople)
       })
   }, [])
 
@@ -48,11 +47,11 @@ const App = () => {
 
   // eslint-disable-next-line no-unused-vars
   let data = []
-  const personsToShow = showAll
-    ? data = Array.from(persons)
-    : persons.filter(person => person.name.toLowerCase().includes(nameToFind.toLowerCase()))
+  const peopleToShow = showAll
+    ? data = Array.from(people)
+    : people.filter(person => person.name.toLowerCase().includes(nameToFind.toLowerCase()))
 
-  const rows = () => personsToShow.map(data =>
+  const rows = () => peopleToShow.map(data =>
     <Person
       key={data.name}
       values={data}
@@ -68,15 +67,15 @@ const App = () => {
       number: newNumber,
     }
   
-    const mapNames = persons.map(person => person.name.toLowerCase())
+    const mapNames = people.map(person => person.name.toLowerCase())
       
     if (mapNames.includes(nameObject.name.toLowerCase())) {
       replaceNumberOf(nameObject)
     } else {
-      personService
+      peopleService
       .create(nameObject)
       .then(createdPerson => {
-        setPersons(persons.concat(createdPerson))
+        setPeople(people.concat(createdPerson))
         setNewName('')
         setNewNumber('')
         setMessage(
@@ -98,16 +97,16 @@ const App = () => {
   }
 
   const replaceNumberOf = (personNumber) => {
-    const person = persons.find(n => n.name === personNumber.name)
+    const person = people.find(n => n.name === personNumber.name)
     const changedPerson = { ...person, number: personNumber.number }
     const askConfirm = `${person.name} is already added to
       phonebook, replace the old number with a new one?`
 
      if (window.confirm(askConfirm)) {
-      personService
+      peopleService
       .update(person.id, changedPerson)
       .then(returnedPerson => {
-        setPersons(persons.map(
+        setPeople(people.map(
           oldperson => oldperson.name !== person.name
             ? oldperson
             : returnedPerson
@@ -127,19 +126,19 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 4000)
-        setPersons(persons.filter(n => n.id !== person.id))
+        setPeople(people.filter(n => n.id !== person.id))
       })
      }
   }
 
   const deletePersonOf = id => {
-    const person = persons.find(n => n.id === id)
+    const person = people.find(n => n.id === id)
     
      if (window.confirm(`Delete ${person.name}?`)) {
-      personService
+      peopleService
       .remove(id, person)
       .then(() => {
-        setPersons(persons.filter(n => n.id !== id))
+        setPeople(people.filter(n => n.id !== id))
         setMessage(
           `Deleted ${person.name}`
         )
@@ -163,7 +162,7 @@ const App = () => {
 	  <nav id='nav' className='navbar navbar-light bg-light'>
       <img src='/logo.png' width='50' height='35' className='d-inline-block align-top' alt=''/>
       <strong>Phonebook</strong>
-      <a role='button' className='btn btn-outline-primary' href='info'>Info</a>
+      <a role='button' className='btn btn-outline-primary' href='/info'>Info</a>
     </nav>
     <div className='container'>
       <br />
@@ -190,7 +189,7 @@ const App = () => {
       <br />
       <div className='col-auto'>
         <b>Contacts</b>
-        <Persons rows={rows()}/>
+        <People rows={rows()}/>
       </div>
     <Footer />
     </div>

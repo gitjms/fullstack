@@ -85,15 +85,15 @@ node --inspect index.js
 MongoDB connection string:
 mongodb+srv://jariDB:jmsMdb2%23@cluster0-wnvyv.mongodb.net/bloglist-app?retryWrites=true&w=majority
 TAI
-mongodb+srv://jariDB:<jmsMdb2#>@cluster0-wnvyv.mongodb.net/bloglist-app?retryWrites=true&w=majority
+mongodb+srv://jariDB:jmsMdb2%23@cluster0-wnvyv.mongodb.net/bloglist-app?retryWrites=true&w=majority
 
 npm install mongoose --save
 
 npm install dotenv --save
 .env:
-MONGODB_URI=mongodb+srv://jariDB:<jmsMdb2#>@cluster0-wnvyv.mongodb.net/bloglist-app?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://jariDB:jmsMdb2%23@cluster0-wnvyv.mongodb.net/bloglist-app?retryWrites=true&w=majority
 
-heroku config:set MONGODB_URI=mongodb+srv://jariDB:<jmsMdb2#>@cluster0-wnvyv.mongodb.net/bloglist-app?retryWrites=true&w=majority
+heroku config:set MONGODB_URI=mongodb+srv://jariDB:jmsMdb2%23@cluster0-wnvyv.mongodb.net/bloglist-app?retryWrites=true&w=majority
 
 BACKEND:
 npm install eslint --save-dev

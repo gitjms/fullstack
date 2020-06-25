@@ -46,6 +46,7 @@ const App = () => {
     }
   }
 
+  // eslint-disable-next-line no-unused-vars
   let data = []
   const personsToShow = showAll
     ? data = Array.from(persons)
@@ -137,7 +138,7 @@ const App = () => {
      if (window.confirm(`Delete ${person.name}?`)) {
       personService
       .remove(id, person)
-      .then(returnedPerson => {
+      .then(() => {
         setPersons(persons.filter(n => n.id !== id))
         setMessage(
           `Deleted ${person.name}`
@@ -159,10 +160,10 @@ const App = () => {
 
   return (
   <>
-	  <nav id='nav' class='navbar navbar-light bg-light'>
-      <img src='/logo.png' width='50' height='35' class='d-inline-block align-top' alt=''/>
+	  <nav id='nav' className='navbar navbar-light bg-light'>
+      <img src='/logo.png' width='50' height='35' className='d-inline-block align-top' alt=''/>
       <strong>Phonebook</strong>
-      <a role='button' class='btn btn-outline-primary' href='/info'>Info</a>
+      <a role='button' className='btn btn-outline-primary' href='/info'>Info</a>
     </nav>
     <div className='container'>
       <br />

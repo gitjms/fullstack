@@ -162,7 +162,7 @@ const App = () => {
 	  <nav id='nav' class='navbar navbar-light bg-light'>
       <img src='/logo.png' width='50' height='35' class='d-inline-block align-top' alt=''/>
       <strong>Phonebook</strong>
-      <a role='button' class='btn btn-outline-primary' href='/info'>Info</a>
+      <a role='button' class='btn btn-outline-primary' href='/api/persons/info'>Info</a>
     </nav>
     <div className='container'>
       <br />

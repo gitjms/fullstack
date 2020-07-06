@@ -1,0 +1,15 @@
+# dependencies
+/node_modules
+
+# production
+/build
+
+# misc
+.DS_Store
+.env
+
+npm-project.txt
+redux-project.txt
+
+serviceWorker.js
+setupTests.js

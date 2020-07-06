@@ -1,0 +1,38 @@
+phone book backend
+
+käynnistys:
+(node_modules/.bin/nodemon index.js)
+
+tai sovelluskehitysmoodissa:
+npm run dev
+
+-> http://localhost:3001/
+
+build:
+npm run build:ui
+
+deploy Herokuun:
+npm run deploy
+
+Molemmat (build+deploy):
+npm run deploy:full
+
+Lokien lukeminen:
+npm run logs:prod
+
+Heroku: phonebook-jms
+
+heroku logs -t
+
+debug chromessa:
+käynnistä sovellus komennolla
+node --inspect index.js
+sitten chromessa F12 ja vihreä ikoni
+
+MongoDB connection string:
+mongodb+srv://jariDB:jmsMdb2%23@cluster0-wnvyv.mongodb.net/phonebook-app?retryWrites=true&w=majority
+
+heroku config:set MONGODB_URI=mongodb+srv://jariDB:jmsMdb2%23@cluster0-wnvyv.mongodb.net/phonebook-app?retryWrites=true&w=majority
+
+lint:
+npm run lint

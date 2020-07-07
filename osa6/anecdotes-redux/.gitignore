@@ -7,9 +7,11 @@
 # misc
 .DS_Store
 .env
+package-lock.json
 
 npm-project.txt
 redux-project.txt
 
 serviceWorker.js
 setupTests.js
+../../osa3/backend/

@@ -1,2 +1,7 @@
-osa3
+/node_modules
+/osa3
 package-lock.json
+.DS_Store
+omia.txt
+npm-project.txt
+redux-project.txt

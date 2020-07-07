@@ -1,10 +1,13 @@
+let timeOutList = []
+
 export const setNotification = (text, time) => {
+  timeOutList.forEach(tout => typeof tout === 'number' ? clearTimeout(tout) : tout)
   return async dispatch => {
     await dispatch(notificationChange(text))
-    setTimeout(() => {
+    timeOutList.push(setTimeout(() => {
       dispatch(notificationChange(null))
-    }, 1000*time)
-    
+      timeOutList = []
+    }, 1000*time))
   }
 }
 

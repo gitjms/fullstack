@@ -1,51 +1,50 @@
-const anecdotesAtStart = [
-  'If it hurts, do it more often',
-  'Adding manpower to a late software project makes it later!',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-  'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
-]
+import anecdoteService from '../services/anecdotes'
 
-const getId = () => (100000 * Math.random()).toFixed(0)
-
-export const createAnecdote = (content) => {
-  return {
-    type: 'NEW_ANECDOTE',
-    data: {
-      id: getId(),
-      content,
-      votes: 0
-    }
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({
+      type: 'INIT_ANECDOTES',
+      data: anecdotes
+    })
   }
 }
 
-export const voteOf = (id, votes) => {
-  return {
-    type: 'VOTE',
-    data: { id, votes }
+export const createAnecdote = (anecdote) => {
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.createNew(anecdote, 0)
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      data: newAnecdote
+    })
   }
 }
 
-const initialState = anecdotesAtStart.map(anecdote => createAnecdote(anecdote))
+export const voteOf = (anecdote) => {
+  return async dispatch => {
+    const returnedContent = await anecdoteService.updateOf(
+      anecdote.id,anecdote.content,anecdote.votes + 1)
+    dispatch({
+      type: 'VOTE',
+      data: returnedContent
+    })
+  }
+}
 
-const anecdoteReducer = (state = initialState, action) => {
+const anecdoteReducer = (state = [], action) => {
   switch(action.type) {
+    case 'INIT_ANECDOTES':
+      return action.data
     case 'NEW_ANECDOTE':
-      return [...state, action]
+      return [...state, action.data]
     case 'VOTE':
       const id = action.data.id
-      const anecdoteToChange = state.find(n => n.data.id === id)
+      const anecdoteToChange = state.find(n => n.id === id)
       const changedAnecdote = { 
-        ...anecdoteToChange,
-        data: {
-          id: id,
-          content: anecdoteToChange.data.content,
-          votes: action.data.votes + 1
-        }
+        ...anecdoteToChange, votes: action.data.votes
       }
       return state.map(anecdote =>
-        anecdote.data.id !== id ? anecdote : changedAnecdote 
+        anecdote.id !== id ? anecdote : changedAnecdote 
       )
     default:
       return state

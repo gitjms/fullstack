@@ -8,9 +8,7 @@ const Filter = () => {
   const handleChange = (event) => {
     event.preventDefault()
     const content = event.target.value
-    event.target.value = ''
-    console.log(content)
-    dispatch(filterChange(content))
+    dispatch(filterChange('SET_FILTER',content))
   }
 
   const style = {

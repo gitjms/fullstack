@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux'
 const Notification = () => {
   const notification = useSelector(({ notification }) => {
     if ( notification !== null ) {
-      return notification[1]
+      return notification
     }
     return null
   })
 
   const style = {
     border: 'solid',
+    textAlign : 'center',
     padding: 10,
     borderWidth: 1
   }

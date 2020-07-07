@@ -1,13 +1,14 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { voteOf } from '../reducers/anecdoteReducer'
-import { notificationChange } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
+// presentational-komponentti
 const Anecdote = ({ anecdote, votes, handleClick }) => {
   return(
     <div>
       <li className='list-group-item'>
-        <em>{anecdote}</em>
+        <em style={{fontWeight: '600'}}>{anecdote}</em>
       </li>
       <li className='list-group-item'>
         has {votes}
@@ -19,37 +20,32 @@ const Anecdote = ({ anecdote, votes, handleClick }) => {
   )
 }
 
-function compareNumbers(a, b) {
-  return b.data.votes - a.data.votes
+function compareVotes(a, b) {
+  return b.votes - a.votes
 }
 
+// container-komponentti
 const Anecdotes = () => {
   const dispatch = useDispatch()
+
   const anecdotes = useSelector(({ filter, anecdotes }) => {
     if ( filter === 'ALL' ) {
-      return anecdotes.sort(compareNumbers)
+      return anecdotes.sort(compareVotes)
     }
-    if ( filter === 'FILTERED' ) {
-      return anecdotes.filter(anecdote => anecdote.data.content.toLowerCase()
-        .includes(filter.filter.toLowerCase())).sort(compareNumbers)
-    }
+    return anecdotes.filter(anecdote => anecdote.content.toLowerCase()
+      .includes(filter.content.toLowerCase())).sort(compareVotes)
   })
 
   return(
     <ul>
       {anecdotes.map(anecdote =>
         <Anecdote
-          key={anecdote.data.id}
-          id={anecdote.data.id}
-          anecdote={anecdote.data.content}
-          votes={anecdote.data.votes}
+          key={anecdote.id}
+          anecdote={anecdote.content}
+          votes={anecdote.votes}
           handleClick={() => {
-            dispatch(voteOf(anecdote.data.id,anecdote.data.votes))
-            const text = 'you voted \''.concat(`${anecdote.data.content}`).concat('\'')
-            dispatch(notificationChange('NOTIFICATION',text))
-            setTimeout(() => {
-              dispatch(notificationChange(null,null))
-            }, 5000)
+            dispatch(voteOf(anecdote))
+            dispatch(setNotification(`you voted '${anecdote.content}'`,5))
           }}
         />
       )}

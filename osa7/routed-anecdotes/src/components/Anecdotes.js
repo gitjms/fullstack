@@ -5,14 +5,14 @@ import {
 } from 'react-router-dom'
 import Anecdote from './Anecdote'
 
-const Anecdotes = ({ anecdotes }) => {
+const Anecdotes = ({ props }) => {
 
   return (
     <div>
     <h2>Anecdotes</h2>
     <Router>
       <ul>
-        {anecdotes.map(anecdote =>
+        {props.anecdotes.map(anecdote =>
           <li key={anecdote.id}>
             <Link to={`/anecdotes/${anecdote.id}`}>
               {anecdote.content}
@@ -23,7 +23,7 @@ const Anecdotes = ({ anecdotes }) => {
 
       <Switch>
         <Route path="/anecdotes/:id">
-          <Anecdote anecdotes={anecdotes} />
+          <Anecdote props={ props } />
         </Route>
       </Switch>
     </Router>

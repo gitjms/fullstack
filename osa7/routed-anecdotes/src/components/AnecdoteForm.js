@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import anecdoteService from '../services/anecdotes'
 
-const CreateNew = (props) => {
+const CreateNew = ({ props }) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -8,12 +9,30 @@ const CreateNew = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    props.addNew({
+
+    const newAnecdote = {
       content,
       author,
       info,
       votes: 0
-    })
+    }
+
+    anecdoteService
+      .create(newAnecdote)
+      .then(() => {
+        anecdoteService
+          .getAll()
+          .then(anecdotes => {
+            props.setAnecdotes(anecdotes)
+          })
+      }, [])
+      .catch(error => {
+        props.setNotification(`${error}`)
+        setTimeout(() => {
+          props.setNotification(null)
+        }, 4000)
+      })
+      props.addNew(newAnecdote)
   }
 
   return (

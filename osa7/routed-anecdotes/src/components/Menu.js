@@ -23,12 +23,10 @@ const Menu = () => {
       })
   }, [])
 
-  console.log(anecdotes)
-
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
-    setNotification(`a new anecdote  ${anecdote} created!`)
+    setNotification(`a new anecdote  ${anecdote.content} created!`)
     setTimeout(() => {
       setNotification(null)
     }, 10000)
@@ -50,26 +48,21 @@ const Menu = () => {
 
       <Switch>
         <Route path="/anecdotes/:id">
-          <Anecdote
-            anecdotes={anecdotes}
-            setAnecdotes={setAnecdotes} />
+          <Anecdote anecdotes={anecdotes} />
         </Route>
         <Route path='/create'>
-          <CreateNew addNew={addNew} />
+          <CreateNew props={{ addNew,setAnecdotes,setNotification }} />
         </Route>
         <Route path='/about'>
           <About />
         </Route>
         <Route path='/'>
-          <Anecdotes anecdotes={anecdotes} />
+          <Anecdotes props={{ anecdotes,setAnecdotes,setNotification }} />
         </Route>
       </Switch>
     </Router>
     </>
   )
 }
-
-
-
 
 export default Menu

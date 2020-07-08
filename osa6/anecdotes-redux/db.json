@@ -1,9 +1,9 @@
 {
   "anecdotes": [
     {
-      "id": "47145",
       "content": "If it hurts, do it more often",
-      "votes": 21
+      "id": "47145",
+      "votes": 23
     },
     {
       "content": "Adding manpower to a late software project makes it later!",
@@ -33,12 +33,12 @@
     {
       "content": "Mustanaamio hiipii yössä",
       "id": "PCIj3JZ",
-      "votes": 17
+      "votes": 28
     },
     {
       "content": "Hiljaa hyvä tulee",
       "id": "bY-yHh6",
-      "votes": 208
+      "votes": 216
     },
     {
       "content": "aa be ce",

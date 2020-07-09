@@ -1,33 +1,34 @@
 import React from 'react'
-import {
-  BrowserRouter as Router,
-  Switch, Route, Link
-} from 'react-router-dom'
+import { Switch, Route, Link } from 'react-router-dom'
 import Anecdote from './Anecdote'
 
 const Anecdotes = ({ props }) => {
 
-  return (
-    <div>
-    <h2>Anecdotes</h2>
-    <Router>
-      <ul>
-        {props.anecdotes.map(anecdote =>
-          <li key={anecdote.id}>
-            <Link to={`/anecdotes/${anecdote.id}`}>
-              {anecdote.content}
-            </Link>
-          </li>
-        )}
-      </ul>
+  const hideWhenVisible = { display: props.visible ? 'none' : '' }
+  const showWhenVisible = { display: props.visible ? '' : 'none' }
 
+  return (
+    <>
+    <div style={hideWhenVisible}>
+      <h2>Anecdotes</h2>
+        <ul>
+          {props.anecdotes.map(anecdote =>
+            <li key={anecdote.id}>
+              <Link to={`/anecdotes/${anecdote.id}`} onClick={() => props.setVisible(true)} >
+                {anecdote.content}
+              </Link>
+            </li>
+          )}
+        </ul>
+    </div>
+    <div style={showWhenVisible}>
       <Switch>
         <Route path="/anecdotes/:id">
           <Anecdote props={ props } />
         </Route>
       </Switch>
-    </Router>
   </div>
+  </>
   )
 }
 

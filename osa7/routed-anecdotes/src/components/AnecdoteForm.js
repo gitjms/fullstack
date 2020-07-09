@@ -19,20 +19,19 @@ const CreateNew = ({ props }) => {
 
     anecdoteService
       .create(newAnecdote)
-      .then(() => {
-        anecdoteService
-          .getAll()
-          .then(anecdotes => {
-            props.setAnecdotes(anecdotes)
-          })
-      }, [])
+      .then((returnedAnecdote) => {
+        props.setAnecdotes(props.anecdotes.concat(returnedAnecdote))
+      })
       .catch(error => {
         props.setNotification(`${error}`)
         setTimeout(() => {
           props.setNotification(null)
         }, 4000)
       })
-      props.addNew(newAnecdote)
+      props.setNotification(`a new anecdote  ${newAnecdote.content} created!`)
+      setTimeout(() => {
+        props.setNotification(null)
+      }, 10000)
   }
 
   return (

@@ -32,21 +32,18 @@ const Anecdote = ({ props }) => {
         }, 4000)
         props.setAnecdotes(props.anecdotes.filter(n => n.id !== anecdote.id))
       })
-
-    console.log('votes: ',anecdote.votes)
-    props.anecdotes.map(a => a.id === id ? anecdote : a)
   }
 
   return (
     <div>
-      <h2>{anecdote.content}</h2>
-      <div>{anecdote.author}</div>
-      <div>{anecdote.info}</div>
+      <h2>{anecdote.content} by {anecdote.author}</h2>
       <div>
-        votes: {anecdote.votes}
+        has {anecdote.votes} votes
         <button type='submit'
           onClick={() => vote(anecdote)} >vote</button>
       </div>
+      <br />
+      <div>for more info see <a href={anecdote.info}>{anecdote.info}</a></div>
     </div>
   )
 }

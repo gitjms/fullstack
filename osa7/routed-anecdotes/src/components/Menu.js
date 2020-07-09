@@ -11,6 +11,7 @@ const Menu = () => {
   const [ anecdotes, setAnecdotes ] = useState([])
   const [ notification, setNotification ] = useState(null)
   const [ visible, setVisible ] = useState(false)
+  const [ fromCreate, setFromCreate ] = useState(true)
 
   useEffect(() => {
     anecdoteService
@@ -29,15 +30,16 @@ const Menu = () => {
       <Notification notification={notification} />
       <div>
         <Link style={padding} to='/' onClick={() => setVisible(false)} >anecdotes</Link>
-        <Link style={padding} to='/create'>create new</Link>
+        <Link style={padding} to='/create' onClick={() => setFromCreate(true)}>create new</Link>
         <Link style={padding} to='/about'>about</Link>
       </div>
 
       <Switch>
         <Route path="/create">
-          {notification === null
-            ? <CreateNew props={{ anecdotes,setAnecdotes,setNotification }} />
-            : <Redirect to="/" />}
+          {fromCreate === true
+            ? <CreateNew props={{ anecdotes,setAnecdotes,setNotification,setFromCreate }} />
+            : <Redirect to="/"/>
+          }
         </Route>
         <Route path='/about'>
           <About />

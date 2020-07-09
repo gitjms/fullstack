@@ -1,19 +1,21 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import anecdoteService from '../services/anecdotes'
+import { useField } from '../hooks'
 
 const CreateNew = ({ props }) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
 
+  const [ form, setForm ] = useState(true)
+  const content = useField(form)
+  const author = useField(form)
+  const info = useField(form)
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     const newAnecdote = {
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     }
 
@@ -32,25 +34,19 @@ const CreateNew = ({ props }) => {
       setTimeout(() => {
         props.setNotification(null)
       }, 10000)
+      setForm(true)
+      props.setFromCreate(false)
   }
 
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
-        </div>
-        <div>
-          author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
-        </div>
-        <div>
-          url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
-        </div>
-        <button>create</button>
+      <form>
+        <div>content<input {...content}/></div>
+        <div>author<input {...author}/></div>
+        <div>url for more info<input {...info}/></div>
+        <button type='submit' onClick={handleSubmit}>create</button>
+        <button type='submit' onClick={() => setForm(false)}>reset</button>
       </form>
     </div>
   )

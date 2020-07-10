@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import anecdoteService from '../services/anecdotes'
 import { useField } from '../hooks'
 
 const CreateNew = ({ props }) => {
@@ -9,8 +8,13 @@ const CreateNew = ({ props }) => {
   const author = useField(form)
   const info = useField(form)
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const addNew = (anecdote) => {
+    anecdote.id = (Math.random() * 10000).toFixed(0)
+    props.setAnecdotes(props.anecdotes.concat(anecdote))
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
 
     const newAnecdote = {
       content: content.value,
@@ -19,23 +23,13 @@ const CreateNew = ({ props }) => {
       votes: 0
     }
 
-    anecdoteService
-      .create(newAnecdote)
-      .then((returnedAnecdote) => {
-        props.setAnecdotes(props.anecdotes.concat(returnedAnecdote))
-      })
-      .catch(error => {
-        props.setNotification(`${error}`)
-        setTimeout(() => {
-          props.setNotification(null)
-        }, 4000)
-      })
-      props.setNotification(`a new anecdote  ${newAnecdote.content} created!`)
-      setTimeout(() => {
-        props.setNotification(null)
-      }, 10000)
-      setForm(true)
-      props.setFromCreate(false)
+    addNew(newAnecdote)
+    setForm(true)
+    props.setFromCreate(false)
+    props.setNotification(`a new anecdote  ${newAnecdote.content} created!`)
+    setTimeout(() => {
+      props.setNotification(null)
+    }, 10000)
   }
 
   return (

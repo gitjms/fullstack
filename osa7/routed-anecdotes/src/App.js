@@ -5,11 +5,10 @@ import Footer from './components/Footer'
 const App = () => {
 
   return (
-    <>
-      <h1>Software anecdotes</h1>
+    <div className='container'>
       <Menu />
       <Footer />
-    </>
+    </div>
   )
 }
 

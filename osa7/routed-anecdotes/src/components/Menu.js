@@ -3,7 +3,8 @@ import About from './About'
 import Anecdotes from './Anecdotes'
 import CreateNew from './AnecdoteForm'
 import Notification from './Notification'
-import { Switch, Route, Link, Redirect } from 'react-router-dom'
+import { Switch, Route, Link, Redirect, useHistory } from 'react-router-dom'
+import { Navbar, Nav } from 'react-bootstrap'
 
 const Menu = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -26,18 +27,33 @@ const Menu = () => {
   const [ visible, setVisible ] = useState(false)
   const [ fromCreate, setFromCreate ] = useState(true)
 
-  const padding = {
-    paddingRight: 5
+  const history = useHistory()
+
+  const color = {
+    color: 'white'
   }
 
   return (
     <>
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar.Brand >Software anecdotes</Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link href="#" as="span">
+              <Link style={color} to='/' onClick={() => setVisible(false)} >anecdotes</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link style={color} to='/create' onClick={() => setFromCreate(true)}>create new</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link style={color} to='/about'>about</Link>
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
       <Notification notification={notification} />
-      <div>
-        <Link style={padding} to='/' onClick={() => setVisible(false)} >anecdotes</Link>
-        <Link style={padding} to='/create' onClick={() => setFromCreate(true)}>create new</Link>
-        <Link style={padding} to='/about'>about</Link>
-      </div>
+      <br />
 
       <Switch>
         <Route path="/create">
@@ -53,6 +69,7 @@ const Menu = () => {
           <Anecdotes
             props={{
               visible,
+              history,
               anecdotes,
               setAnecdotes,
               setNotification,

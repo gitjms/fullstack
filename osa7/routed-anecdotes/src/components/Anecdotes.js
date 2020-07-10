@@ -9,25 +9,30 @@ const Anecdotes = ({ props }) => {
 
   return (
     <>
-    <div style={hideWhenVisible}>
-      <h2>Anecdotes</h2>
+      <div style={hideWhenVisible}>
+        <h2>Anecdotes</h2>
         <ul>
           {props.anecdotes.map(anecdote =>
             <li key={anecdote.id}>
-              <Link to={`/anecdotes/${anecdote.id}`} onClick={() => props.setVisible(true)} >
+              <Link
+                to={`/anecdotes/${anecdote.id}`}
+                onClick={() => {
+                  props.setVisible(true)
+                  props.history.push('/')
+                }}>
                 {anecdote.content}
               </Link>
             </li>
           )}
         </ul>
+      </div>
+      <div style={showWhenVisible}>
+        <Switch>
+          <Route path="/anecdotes/:id">
+            <Anecdote props={ props } />
+          </Route>
+        </Switch>
     </div>
-    <div style={showWhenVisible}>
-      <Switch>
-        <Route path="/anecdotes/:id">
-          <Anecdote props={ props } />
-        </Route>
-      </Switch>
-  </div>
   </>
   )
 }

@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import { useField } from '../hooks'
+import { Form, Button } from 'react-bootstrap'
 
 const CreateNew = ({ props }) => {
 
@@ -32,16 +33,27 @@ const CreateNew = ({ props }) => {
     }, 10000)
   }
 
+  const padding = {
+    padding: '5px'
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form>
-        <div>content<input {...content}/></div>
-        <div>author<input {...author}/></div>
-        <div>url for more info<input {...info}/></div>
-        <button type='submit' onClick={handleSubmit}>create</button>
-        <button type='submit' onClick={() => setForm(false)}>reset</button>
-      </form>
+      <Form>
+        <Form.Group>
+          <Form.Label>content:</Form.Label>
+          <Form.Control {...content} />
+          <Form.Label>author:</Form.Label>
+          <Form.Control {...author} />
+          <Form.Label>url for more info:</Form.Label>
+          <Form.Control {...info} />
+          <br />
+          <Button variant='primary' type='submit' onClick={handleSubmit}>create</Button>
+          <span style={padding}></span>
+          <Button variant='primary' type='submit' onClick={() => setForm(false)}>reset</Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 

@@ -15,7 +15,7 @@ const BookForm = (props) => {
     onError: (error) => {
       props.notifyError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
     },
-    update: (store, response) => {
+    addBook: (store, response) => {
       updateCacheWith(response.data.addBook)
     }
   })
@@ -58,43 +58,50 @@ const BookForm = (props) => {
     setGenre('')
   }
 
+  const width = {
+    width: '100px'
+  }
+
   return (
-    <div>
+    <div className='col-auto'>
+    <br />
     <h2>add books</h2>
       <form onSubmit={submit}>
-        <div>
-          title
+        <div className='form-group'>
+          <label style={width}>title:</label>
           <input
             value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
         </div>
-        <div>
-          author
+        <div className='form-group'>
+          <label style={width}>author:</label>
           <input
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
-        <div>
-          published
+        <div className='form-group'>
+          <label style={width}>published:</label>
           <input
             type='number'
             value={published}
             onChange={({ target }) => setPublished(target.value)}
           />
         </div>
-        <div>
+        <div className='form-group'>
           <input
             value={genre}
             onChange={({ target }) => setGenre(target.value)}
           />
-          <button onClick={addGenre} type="button">add genre</button>
+          <button className='btn btn-primary' onClick={addGenre} type="button">
+            add genre
+          </button>
         </div>
         <div>
           genres: {genres.join(' ')}
         </div>
-        <button type='submit'>create book</button>
+        <button className='btn btn-primary' type='submit'>create book</button>
       </form>
     </div>
   )

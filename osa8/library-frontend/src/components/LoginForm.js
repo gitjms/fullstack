@@ -8,12 +8,12 @@ const LoginForm = (props) => {
 
   const [ login, result ] = useMutation(LOGIN, {
     onError: (error) => {
-      props.notifyError(error.graphQLErrors[0].message)
+      props.notifyError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
     }
   })
 
   useEffect(() => {
-    if ( result.data ) {
+    if (result.data) {
       const token = result.data.login.value
       props.setToken(token)
       localStorage.setItem('library-user-token', token)
@@ -23,30 +23,36 @@ const LoginForm = (props) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    await login({ variables: { username, password } })
+    await login({  username, password })
 
     props.setPage('authors')
   }
+
+  const width = {
+    width: '100px'
+  }
   
   return (
-    <div>
+    <div className='col-auto'>
       <br />
       <form onSubmit={submit}>
-        <div>
-          username <input
+        <div className='form-group'>
+          <label style={width}>username:</label>
+          <input
             value={username}
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
-        <div>
-          password <input
+        <div className='form-group'>
+          <label style={width}>password:</label>
+          <input
             type='password'
             value={password}
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type='submit'>login</button>
-        <button type='button' onClick={() => props.setPage('authors')}>cancel</button>
+        <button className='btn btn-primary' type='submit'>login</button>
+        <button className='btn btn-primary' type='button' onClick={() => props.setPage('authors')}>cancel</button>
       </form>
     </div>
   )

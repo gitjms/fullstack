@@ -57,8 +57,13 @@ const Books = (props) => {
     props.setGenre(val.value)
   }
 
+  const padding = {
+    paddingRight: '10px'
+  }
+
   return (
     <div>
+      <br />
       <h2>books</h2>
       {props.optedGenre !== 'all' &&
         <>in genre <b>{props.optedGenre}</b><br /><br /></>
@@ -66,8 +71,8 @@ const Books = (props) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
-            <th>
+            <th style={padding}></th>
+            <th style={padding}>
               author
             </th>
             <th>
@@ -76,31 +81,33 @@ const Books = (props) => {
           </tr>
           {booksToShow.map((b,v,i) =>
             <tr key={v}>
-              <td>{b.title}</td>
-              <td>{b.author.name}</td>
+              <td style={padding}><em>{b.title}</em></td>
+              <td style={padding}>{b.author.name}</td>
               <td>{b.published}</td>
             </tr>
             )
           }
         </tbody>
       </table><br />
-      {genres &&
-        genres.map((g,v,i) =>
+      {genres.map((g,v,i) =>
           <Button genre={g} key={i.indexOf(g)} setGenre={props.setGenre} />
       )}
-      <button type='button'
+      <button type='button' className='btn btn-primary'
         onClick={() => props.setGenre('all')}
         id='genre-button'
         autoFocus
       >all genres
       </button>
+      <br />
       <div>
+      <br />
         <Select
           value={props.optedGenre}
           options={options}
           onChange={genreChange}
         />
       </div>
+      <br />
     </div>
   )
 }

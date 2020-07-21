@@ -5,6 +5,7 @@ import BirthyearForm from './BirthyearForm'
 import Togglable from './Togglable'
 
 const Authors = (props) => {
+
   const result = useQuery(ALL_AUTHORS)
   const birthyearFormRef = useRef()
 
@@ -33,6 +34,7 @@ const Authors = (props) => {
   return (
     <>
       <div>
+        <br />
         <h2>authors</h2>
         <table>
           <tbody>
@@ -55,7 +57,6 @@ const Authors = (props) => {
           </tbody>
         </table>
       </div>
-      <br />
       {props.token &&
         <div>
           {setBirthyear()}

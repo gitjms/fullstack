@@ -6,7 +6,7 @@ import BookForm from './components/BookForm'
 import { Notify, NotifyError } from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Recommended from './components/Recommended'
-import { CURRENT_USER, FAVORITE_BOOKS, BOOK_ADDED } from './queries'
+import { CURRENT_USER, FAVORITE_BOOKS, BOOK_ADDED } from './queries'//, AUTHOR_EDITED } from './queries'
 
 const App = () => {
 
@@ -17,11 +17,12 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [page, setPage] = useState('authors')
   const [optedGenre, setGenre] = useState('all')
-  const [getFavoriteBooks, resultBooks] = useLazyQuery(FAVORITE_BOOKS,) 
+  const [getFavoriteBooks, resultBooks] = useLazyQuery(FAVORITE_BOOKS) 
   const [favoriteBooks, setFavoriteBooks] = useState([])
   const [getFavoriteGenre, resultUser] = useLazyQuery(CURRENT_USER) 
   const [favoriteGenre, setFavoriteGenre] = useState('')
   const [updateCache, setupdateCache] = useState(null)
+  // const [birthdayCache, setbirthdayCache] = useState(null)
 
   useEffect(() => {
     if (resultBooks.data && resultUser.data) {
@@ -37,6 +38,14 @@ const App = () => {
       notify(`${addedBook.title} added`)
     }
   })
+
+  // useSubscription(AUTHOR_EDITED, {
+  //   onSubscriptionData: ({ subscriptionData }) => {
+  //     const editedAuthor = subscriptionData.data.authorEdited
+  //     setbirthdayCache(editedAuthor)
+  //     notify(`${editedAuthor.name} birthday modified`)
+  //   }
+  // })
 
   const notify = (message) => {
     setMessage(message)
@@ -59,33 +68,41 @@ const App = () => {
   }
 
   return (
-    <div>
-      <div>
-        <button onClick={() => setPage('authors')}>authors</button>
-        <button onClick={() => setPage('books')}>books</button>
-        {token &&
-          <>
-            <button onClick={() => setPage('addBook')}>add book</button>
-            <button onClick={() => {
-              getFavoriteBooks()
-              getFavoriteGenre()
-              setPage('recommended')
-            }} id='recommends'>
-              recommended
-            </button>
-          </>
-        }
-        {!token
-          ? <button onClick={() => setPage('login')}>login</button>
-          : <button onClick={logout}>logout</button>
-        }
-      </div>
+    <>
+      <nav id='nav' className='navbar navbar-light bg-light'>
+        <a className="navbar-brand" href='/'><strong>Bloglist</strong></a>
+        <div className='button-group'>
+          <button className='btn btn-primary' onClick={() => setPage('authors')}>authors</button>
+          <button className='btn btn-primary' onClick={() => setPage('books')}>books</button>
+          {token &&
+            <>
+              <button className='btn btn-primary' onClick={() => setPage('addBook')}>add book</button>
+              <button className='btn btn-primary' onClick={() => {
+                getFavoriteBooks()
+                getFavoriteGenre()
+                setPage('recommended')
+              }} id='recommends'>
+                recommended
+              </button>
+            </>
+          }
+          {!token
+            ? <button className='btn btn-primary' onClick={() => setPage('login')}>login</button>
+            : <button className='btn btn-primary' onClick={logout}>logout</button>
+          }
+        </div>
+      </nav>
 
+
+      <div className='container'>
       <Notify message={message} />
       <NotifyError errorMessage={errorMessage} />
 
       <Authors
-        show={page === 'authors'} notifyError={notifyError} token={token}
+        show={page === 'authors'}
+        notifyError={notifyError}
+        token={token}
+        client={client}
       />
 
       <Books
@@ -122,10 +139,12 @@ const App = () => {
         <LoginForm
           setToken={setToken}
           notifyError={notifyError}
+          setPage={setPage}
         />
       }
 
     </div>
+    </>
   )
 }
 

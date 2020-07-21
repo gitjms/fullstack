@@ -19,7 +19,7 @@ const BirthyearForm = (props) => {
     onError: (error) => {
       props.setError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
     },
-    update: (store, response) => {
+    editAuthor: (store, response) => {
       const authorsInStore = store.readQuery({ query: ALL_AUTHORS })
       store.writeQuery({
         query: ALL_AUTHORS,
@@ -46,8 +46,13 @@ const BirthyearForm = (props) => {
     setAuthor(val.value)
   }
 
+  const width = {
+    width: '50px'
+  }
+
   return (
     <div>
+      <br />
       <h3>set birthyear</h3>
       <form onSubmit={submit}>
         <div>
@@ -57,14 +62,15 @@ const BirthyearForm = (props) => {
             onChange={authorChange}
           />
         </div>
-        <div>
-          born
+        <br />
+        <div className='form-group'>
+          <label style={width}>born:</label>
           <input
             type='number'
             value={born}
             onChange={({ target }) => setBirthyear(target.value)}
           />
-          <button type='submit'>update author</button>
+          <button className='btn btn-primary' type='submit'>update author</button>
         </div>
       </form>
     </div>

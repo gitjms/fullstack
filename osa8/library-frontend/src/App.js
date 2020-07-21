@@ -6,25 +6,27 @@ import BookForm from './components/BookForm'
 import Notify from './components/Notify'
 import LoginForm from './components/LoginForm'
 import Recommended from './components/Recommended'
-import { FAVORITE_BOOKS } from './queries'
+import { CURRENT_USER, FAVORITE_BOOKS } from './queries'
 
 const App = () => {
 
-  const [token, setToken] = useState(null)
+  const client = useApolloClient()
+
+  const [token, setToken] = useState(localStorage.getItem('library-user-token'))
   const [errorMessage, setErrorMessage] = useState(null)
   const [page, setPage] = useState('authors')
   const [optedGenre, setGenre] = useState('all')
-  const client = useApolloClient()
-
-  const [user, setUser] = useState(null)
-  const [getFavoriteBooks, resultBooks] = useLazyQuery(FAVORITE_BOOKS) 
+  const [getFavoriteBooks, resultBooks] = useLazyQuery(FAVORITE_BOOKS,) 
   const [favoriteBooks, setFavoriteBooks] = useState([])
+  const [getFavoriteGenre, resultUser] = useLazyQuery(CURRENT_USER) 
+  const [favoriteGenre, setFavoriteGenre] = useState('')
 
   useEffect(() => {
-    if (resultBooks.data) {
+    if (resultBooks.data && resultUser.data) {
       setFavoriteBooks(resultBooks.data.favorites)
+      setFavoriteGenre(resultUser.data.me.favoriteGenre)
     }
-  }, [resultBooks])
+  }, [resultBooks,resultUser])
 
   const notify = (message) => {
     setErrorMessage(message)
@@ -38,7 +40,6 @@ const App = () => {
     localStorage.clear()
     client.resetStore()
   }
-  console.log('favoriteBooks',favoriteBooks)
 
   return (
     <div>
@@ -50,8 +51,9 @@ const App = () => {
             <button onClick={() => setPage('addBook')}>add book</button>
             <button onClick={() => {
               getFavoriteBooks()
+              getFavoriteGenre()
               setPage('recommended')
-            }}>
+            }} id='recommends'>
               recommended
             </button>
           </>
@@ -74,12 +76,16 @@ const App = () => {
         setGenre={setGenre}
       />
 
-      {user && favoriteBooks.length > 0 &&
+      {page === 'recommended' && favoriteBooks.length > 0 &&
         <Recommended
           show={page === 'recommended'}
-          user={user}
           favoriteBooks={favoriteBooks}
+          favoriteGenre={favoriteGenre}
         />
+      }
+
+      {page === 'recommended' && favoriteBooks.length === 0 &&
+        <div><br />no recommended books</div>
       }
 
       {page === 'addBook' &&
@@ -94,7 +100,6 @@ const App = () => {
           setToken={setToken}
           setError={notify}
           setPage={setPage}
-          setUser={setUser}
         />
       }
 

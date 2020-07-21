@@ -11,7 +11,7 @@ const User = require('./models/user')
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 
-const JWT_SECRET = process.env.SECRET
+const JWT_SECRET = config.SECRET
 const MONGODB_URI = config.MONGODB_URI
 
 

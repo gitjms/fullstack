@@ -8,8 +8,8 @@ const Recommended = (props) => {
 
   return (
     <div>
-      <h2>books</h2>
-      <>in genre <b>{props.user.favoriteGenre}</b><br /><br /></>
+      <h2>recommendations</h2>
+      <>books in your favorite genre <b>{props.favoriteGenre}</b><br /><br /></>
       <table>
         <tbody>
           <tr>

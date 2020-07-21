@@ -1,4 +1,5 @@
 import React from 'react'
+import Select from 'react-select'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 import Button from './Button'
@@ -33,6 +34,17 @@ const Books = (props) => {
     booksToShow = books
   }
 
+  const options = genres.map(genre => {
+    return {
+      value: genre,
+      label: genre
+    }
+  })
+
+  const genreChange = (val) => {
+    props.setGenre(val.value)
+  }
+
   return (
     <div>
       <h2>books</h2>
@@ -59,7 +71,7 @@ const Books = (props) => {
             )
           }
         </tbody>
-      </table>
+      </table><br />
       {genres &&
         genres.map((g,v,i) =>
           <Button genre={g} key={i.indexOf(g)} setGenre={props.setGenre} />
@@ -70,6 +82,13 @@ const Books = (props) => {
         autoFocus
       >all genres
       </button>
+      <div>
+        <Select
+          value={props.optedGenre}
+          options={options}
+          onChange={genreChange}
+        />
+      </div>
     </div>
   )
 }

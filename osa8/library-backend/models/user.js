@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
     minlength: 3,
     uniqueCaseInsensitive: true
   },
-  password: String,
+  // password: String,
   favoriteGenre: String
 })
 userSchema.plugin(require('mongoose-beautiful-unique-validation'))

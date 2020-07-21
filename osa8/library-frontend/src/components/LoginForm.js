@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import { LOGIN, CURRENT_USER } from '../queries'
+import { useMutation } from '@apollo/client'
+import { LOGIN } from '../queries'
 
 const LoginForm = (props) => {
   const [username, setUsername] = useState('')
@@ -27,9 +27,6 @@ const LoginForm = (props) => {
 
     props.setPage('authors')
   }
-
-  const currentUser = useQuery(CURRENT_USER)
-  props.setUser(currentUser)
   
   return (
     <div>

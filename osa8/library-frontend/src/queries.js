@@ -1,5 +1,14 @@
 import { gql  } from '@apollo/client'
 
+
+const AUTHOR_DETAILS = gql`
+fragment authorDetails on Author {
+  name
+  born
+  bookCount
+}
+`
+
 export const CURRENT_USER = gql`
   query {
     me {
@@ -12,83 +21,39 @@ export const CURRENT_USER = gql`
 export const FAVORITE_BOOKS = gql`
   query {
     favorites {
-      title 
+      title
       author {
-        name
-        born
-        bookCount
+      ...authorDetails
       }
       published
       genres
     }
   }
+  ${AUTHOR_DETAILS}
 `
 
 export const ALL_AUTHORS = gql`
   query {
     allAuthors {
-      name
-      born
-      bookCount
+      ...authorDetails
     }
   }
+  ${AUTHOR_DETAILS}
 `
 export const ALL_BOOKS = gql`
-  query {
-    allBooks { 
-      title 
-      author {
-        name
-        born
-        bookCount
-      }
-      published
-      genres
-    }
-  }
-`
-export const FIND_BOOKS_BY_AUTHOR = gql`
-  query findBookByGenre($author: String!){
-    allBooks(author: $author) { 
-      title 
-      author {
-        name
-        born
-        bookCount
-      }
-      published
-      genres
-    }
-  }
-`
-export const FIND_BOOKS_BY_GENRE = gql`
-  query findBookByGenre($genre: String!){
-    allBooks(genre: $genre) { 
-      title 
-      author {
-        name
-        born
-        bookCount
-      }
-      published
-      genres
-    }
-  }
-`
-export const FIND_BOOKS_BY_AUTHOR_AND_GENRE = gql`
-  query findBookByAuthorAndGenre($author: String!, $genre: String!){
+  query allBooks($author: String, $genre: String){
     allBooks(author: $author, genre: $genre) { 
-      title 
+      title
       author {
-        name
-        born
-        bookCount
+        ...authorDetails
       }
       published
       genres
     }
   }
+  ${AUTHOR_DETAILS}
 `
+
 export const NEW_BOOK = gql`
   mutation addBook($title: String!, $author:String!, $published:Int!, $genres:[String!]!) {
     addBook(
@@ -99,12 +64,26 @@ export const NEW_BOOK = gql`
     ){
       title,
       author {
-        name
-        born
-        bookCount
+        ...authorDetails
       }
     }
   }
+  ${AUTHOR_DETAILS}
+`
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title
+      author {
+        ...authorDetails
+      }
+      published
+      genres
+    }
+  }
+  
+${AUTHOR_DETAILS}
 `
 
 export const EDIT_AUTHOR = gql`

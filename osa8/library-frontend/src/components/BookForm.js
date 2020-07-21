@@ -13,9 +13,26 @@ const BookForm = (props) => {
   const [ addBook ] = useMutation(NEW_BOOK, {
     refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ],
     onError: (error) => {
-      props.setError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
+      props.notifyError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
+    },
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook)
     }
   })
+
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => 
+      set.map(p => p.id).includes(object.id)  
+
+    const dataInStore = props.client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      props.client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }
+    props.setupdateCache(addedBook)
+  }
 
   if (!props.show) {
     return null
@@ -34,7 +51,6 @@ const BookForm = (props) => {
       setGenres([])
       setGenre('')
     }
-    // props.setPage('authors')
   }
 
   const addGenre = () => {

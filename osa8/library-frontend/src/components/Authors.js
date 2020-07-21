@@ -25,7 +25,7 @@ const Authors = (props) => {
     <Togglable buttonLabel='Set birthyear' closeLabel='close' ref={birthyearFormRef}>
       <BirthyearForm
         authors={authors}
-        setError={props.setError}
+        setError={props.notifyError}
       />
     </Togglable>
   )

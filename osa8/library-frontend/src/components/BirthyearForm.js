@@ -17,7 +17,7 @@ const BirthyearForm = (props) => {
 
   const [ editAuthor ] = useMutation(EDIT_AUTHOR, {
     onError: (error) => {
-      props.setError(error.graphQLErrors[0].message)
+      props.setError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
     },
     update: (store, response) => {
       const authorsInStore = store.readQuery({ query: ALL_AUTHORS })

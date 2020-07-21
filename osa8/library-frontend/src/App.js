@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { useApolloClient, useLazyQuery } from '@apollo/client'
+import { useApolloClient, useLazyQuery, useSubscription } from '@apollo/client'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import BookForm from './components/BookForm'
-import Notify from './components/Notify'
+import { Notify, NotifyError } from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Recommended from './components/Recommended'
-import { CURRENT_USER, FAVORITE_BOOKS } from './queries'
+import { CURRENT_USER, FAVORITE_BOOKS, BOOK_ADDED } from './queries'
 
 const App = () => {
 
   const client = useApolloClient()
 
   const [token, setToken] = useState(localStorage.getItem('library-user-token'))
+  const [message, setMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [page, setPage] = useState('authors')
   const [optedGenre, setGenre] = useState('all')
@@ -20,6 +21,7 @@ const App = () => {
   const [favoriteBooks, setFavoriteBooks] = useState([])
   const [getFavoriteGenre, resultUser] = useLazyQuery(CURRENT_USER) 
   const [favoriteGenre, setFavoriteGenre] = useState('')
+  const [updateCache, setupdateCache] = useState(null)
 
   useEffect(() => {
     if (resultBooks.data && resultUser.data) {
@@ -28,10 +30,25 @@ const App = () => {
     }
   }, [resultBooks,resultUser])
 
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+      setupdateCache(addedBook)
+      notify(`${addedBook.title} added`)
+    }
+  })
+
   const notify = (message) => {
-    setErrorMessage(message)
+    setMessage(message)
     setTimeout(() => {
-      setErrorMessage(null)
+      setMessage(null)
+    }, 10000)
+  }
+
+  const notifyError = (errorMessage) => {
+    setErrorMessage(errorMessage)
+    setTimeout(() => {
+      setMessage(null)
     }, 10000)
   }
 
@@ -64,16 +81,19 @@ const App = () => {
         }
       </div>
 
-      <Notify errorMessage={errorMessage} />
+      <Notify message={message} />
+      <NotifyError errorMessage={errorMessage} />
 
       <Authors
-        show={page === 'authors'} setError={notify} token={token}
+        show={page === 'authors'} notifyError={notifyError} token={token}
       />
 
       <Books
         show={page === 'books'}
         optedGenre={optedGenre}
         setGenre={setGenre}
+        client={client}
+        updateCache={updateCache}
       />
 
       {page === 'recommended' && favoriteBooks.length > 0 &&
@@ -90,16 +110,18 @@ const App = () => {
 
       {page === 'addBook' &&
         <BookForm
-          show={page === 'addBook'} setError={notify} setPage={setPage}
+          show={page === 'addBook'}
+          setPage={setPage}
+          notifyError={notifyError}
+          client={client}
+          setupdateCache={setupdateCache}
         />
       }
 
       {page === 'login' &&
         <LoginForm
-          show={page === 'login'}
           setToken={setToken}
-          setError={notify}
-          setPage={setPage}
+          notifyError={notifyError}
         />
       }
 

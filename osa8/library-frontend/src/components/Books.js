@@ -1,37 +1,49 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Select from 'react-select'
-import { useQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 import Button from './Button'
 
 const Books = (props) => {
 
-  const result = useQuery(ALL_BOOKS)
+  const allbooks = useQuery(ALL_BOOKS)
+  const dataInStore = props.client.readQuery({ query: ALL_BOOKS })
+  const [getGenreBooks, resultBooks] = useLazyQuery(
+    ALL_BOOKS, { variables: { genre: props.optedGenre } }
+  ) 
+  const [genreBooks, setGenreBooks] = useState([])
+
+  useEffect(() => {
+    if (resultBooks.data) {
+      setGenreBooks(resultBooks.data.allBooks)
+    }
+  }, [resultBooks,props.optedGenre])
+
+  useEffect(() => {
+    if (props.optedGenre !== 'all') {
+      getGenreBooks()
+    }
+  }, [getGenreBooks,props.optedGenre])
 
   if (!props.show) {
     return null
   }
 
-  if (result.loading)  {
+  if (allbooks.loading)  {
     return <div>loading...</div>
   }
 
-  let books = []
   let genres = []
-  if (result.data) {
-    books = result.data.allBooks
-    let genreItems = []
-    books.map(b => b.genres.filter(g => genreItems.push(g)))
-    genres = [...new Set(genreItems)]
-  }
-
   let booksToShow = []
   if (props.optedGenre !== 'all') {
-    booksToShow = books.filter(b =>
-      b.genres.includes(props.optedGenre)
-    )
-  } else {
-    booksToShow = books
+    booksToShow = genreBooks
+  } else if (allbooks.data) {
+    props.updateCache === null
+      ? booksToShow = allbooks.data.allBooks
+      : booksToShow = dataInStore.allBooks.concat(props.updateCache)
+    let genreItems = []
+    booksToShow.map(b => b.genres.filter(g => genreItems.push(g)))
+    genres = [...new Set(genreItems)]
   }
 
   const options = genres.map(genre => {

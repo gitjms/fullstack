@@ -3,6 +3,7 @@ const {
   AuthenticationError
 } = require('apollo-server')
 
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const logger = require('../utils/logger')
 const config = require('../utils/config')
@@ -11,6 +12,19 @@ const Book = require('../models/book')
 const User = require('../models/user')
 
 const JWT_SECRET = config.SECRET
+
+const password_strength = (password) => {
+  const strongRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})')
+  const mediumRegex = new RegExp('^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})')
+
+  if(strongRegex.test(password)) {
+    logger.info('password strength is strong')
+  } else if(mediumRegex.test(password)) {
+    logger.info('password strength is medium')
+  } else {
+    logger.info('password strength is weak')
+  }
+}
 
   const resolvers = {
     Query: {
@@ -30,7 +44,9 @@ const JWT_SECRET = config.SECRET
         return Book.find({}).populate('author')
       },
       allAuthors: () => Author.find({}).populate('books'),
-      me: (root, args, context) =>  context.currentUser,
+      me: async (root, args, context) => {
+        return await User.findOne({ username: { $in: context.currentUser.username } })
+      },
       favorites: async (root, args, context) =>
         await Book.find(
           { genres: { $in: [context.currentUser.favoriteGenre] }})
@@ -38,7 +54,8 @@ const JWT_SECRET = config.SECRET
     },
     User: {
       username: (root) => root.username,
-      favoriteGenre: (root) => root.favoriteGenre
+      favoriteGenre: (root) => root.favoriteGenre,
+      passwordHash: (root) => root.passwordHash
     },
     Book: {
       title: (root) => root.title,
@@ -53,21 +70,40 @@ const JWT_SECRET = config.SECRET
       bookCount: (root) => root.books.length
     },
     Mutation: {
-      createUser: (root, args) => {
-        const user = new User({ ...args })
-    
-        return user.save()
-          .catch(error => {
+      createUser: async (root, args) => {
+        password_strength(args.password)
+        const saltRounds = 10
+        const passwordHash = await bcrypt.hash(args.password, saltRounds)
+
+        const user = new User({
+          username: args.username,
+          favoriteGenre: args.favoriteGenre,
+          passwordHash
+        })
+
+        await user.save().catch(error => {
             logger.error('error: ', error)
             throw new UserInputError(error.message, {
               invalidArgs: args,
             })
-          })
+        })
+        const newUser = await User.findOne({ username: args.username })
+    
+        const userForToken = {
+          username: newUser.username,
+          id: newUser._id,
+        }
+
+        return { value: jwt.sign(userForToken, JWT_SECRET) }
       },
   
       login: async (root, args) => {
         const user = await User.findOne({ username: args.username })
-        if ( !user || args.password !== 'secret' ) {
+        const passwordCorrect = user === null
+          ? false
+          : await bcrypt.compare(args.password, user.passwordHash)
+      
+        if (!(user && passwordCorrect)) {
           throw new UserInputError("wrong credentials")
         }
     
@@ -75,6 +111,7 @@ const JWT_SECRET = config.SECRET
           username: user.username,
           id: user._id,
         }
+
         return { value: jwt.sign(userForToken, JWT_SECRET) }
       },
   
@@ -134,8 +171,6 @@ const JWT_SECRET = config.SECRET
         if (author) {
           await Author.updateOne(author, { $set: { born: args.setBornTo }})
 
-          pubsub.publish('AUTHOR_EDITED', { authorEdited: author })
-
           return Author.findOne({ name: { $in: args.name }}).populate('books')
         } else {
           return null
@@ -146,10 +181,7 @@ const JWT_SECRET = config.SECRET
     Subscription: {
       bookAdded: {
         subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
-      },
-      authorEdited: {
-        subscribe: () => pubsub.asyncIterator(['AUTHOR_EDITED'])
-      },
+      }
     }
   }
 

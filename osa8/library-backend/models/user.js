@@ -8,9 +8,15 @@ const userSchema = mongoose.Schema({
     minlength: 3,
     uniqueCaseInsensitive: true
   },
-  // password: String,
-  favoriteGenre: String
+  favoriteGenre: String,
+  passwordHash: String
 })
 userSchema.plugin(require('mongoose-beautiful-unique-validation'))
+
+userSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    delete returnedObject.passwordHash
+  }
+})
 
 module.exports = mongoose.model('User', userSchema)

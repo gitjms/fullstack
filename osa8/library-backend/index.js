@@ -5,7 +5,6 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 const User = require('./models/user')
-
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 

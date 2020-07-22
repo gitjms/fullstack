@@ -5,6 +5,9 @@ import { EDIT_AUTHOR, ALL_AUTHORS } from '../queries'
 
 const BirthyearForm = (props) => {
 
+  const Scroll = require('react-scroll')
+  const scroller = Scroll.animateScroll
+
   const options = props.authors.map( a => {
     return {
       value: a.name,
@@ -36,9 +39,11 @@ const BirthyearForm = (props) => {
 
     if (author !== '' && born !== '') {
       editAuthor({ variables: { name: author, setBornTo: Number(born) } })
+      props.notify(`author ${author} modified`)
 
       setBirthyear('')
       setAuthor('')
+      scroller.scrollToTop()
     }
   }
 
@@ -69,8 +74,12 @@ const BirthyearForm = (props) => {
             type='number'
             value={born}
             onChange={({ target }) => setBirthyear(target.value)}
+            data-toggle='tooltip' data-placement='top' title='set birthyear' aria-label='set birthyear'
           />
-          <button className='btn btn-primary' type='submit'>update author</button>
+          <button className='btn btn-primary' type='submit'
+            data-toggle='tooltip' data-placement='top' title='update author' aria-label='update author'>
+            update author
+          </button>
         </div>
       </form>
     </div>

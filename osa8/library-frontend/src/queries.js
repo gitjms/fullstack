@@ -13,7 +13,6 @@ fragment authorDetails on Author {
 export const CURRENT_USER = gql`
   query {
     me {
-      username
       favoriteGenre
     }
   }
@@ -99,21 +98,21 @@ export const EDIT_AUTHOR = gql`
   }
 `
 
-export const AUTHOR_EDITED = gql`
-  subscription {
-    authorEdited {
-      author {
-        ...authorDetails
-      }
-    }
-  }
-  
-${AUTHOR_DETAILS}
-`
-
 export const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
     login(username: $username, password: $password)  {
+      value
+    }
+  }
+`
+
+export const SIGNUP = gql`
+  mutation createUser($username: String!, $favoriteGenre: String!, $password: String!){
+    createUser(
+      username: $username,
+      favoriteGenre: $favoriteGenre,
+      password: $password
+    ) {
       value
     }
   }

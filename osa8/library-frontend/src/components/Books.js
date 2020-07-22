@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import Select from 'react-select'
-import { useQuery, useLazyQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 import Button from './Button'
 
 const Books = (props) => {
 
-  const allbooks = useQuery(ALL_BOOKS)
-  const dataInStore = props.client.readQuery({ query: ALL_BOOKS })
   const [getGenreBooks, resultBooks] = useLazyQuery(
-    ALL_BOOKS, { variables: { genre: props.optedGenre } }
-  ) 
+    ALL_BOOKS, { variables: { genre: props.optedGenre } })
   const [genreBooks, setGenreBooks] = useState([])
+
+  const [getAllBooks, resultAllBooks] = useLazyQuery(ALL_BOOKS)
+  const [allBooks, setAllBooks] = useState([])
 
   useEffect(() => {
     if (resultBooks.data) {
@@ -20,31 +20,36 @@ const Books = (props) => {
   }, [resultBooks,props.optedGenre])
 
   useEffect(() => {
-    if (props.optedGenre !== 'all') {
+    if (resultAllBooks.data) {
+      setAllBooks(resultAllBooks.data.allBooks)
+    }
+  }, [resultAllBooks])
+
+  useEffect(() => {
+    if (props.optedGenre === 'all') {
+      getAllBooks()
+    } else {
       getGenreBooks()
     }
-  }, [getGenreBooks,props.optedGenre])
+  }, [getGenreBooks,getAllBooks,props.optedGenre])
 
   if (!props.show) {
     return null
   }
 
-  if (allbooks.loading)  {
-    return <div>loading...</div>
-  }
+  let booksToShow = []
+  console.log('all',allBooks.lengt)
+  console.log(' props.', props.allBooks.lengt)
+  props.optedGenre === 'all'
+    ? allBooks.lengt > props.allBooks.lengt
+      ? booksToShow = allBooks
+      : booksToShow = props.allBooks
+    : booksToShow = genreBooks
 
   let genres = []
-  let booksToShow = []
-  if (props.optedGenre !== 'all') {
-    booksToShow = genreBooks
-  } else if (allbooks.data) {
-    props.updateCache === null
-      ? booksToShow = allbooks.data.allBooks
-      : booksToShow = dataInStore.allBooks.concat(props.updateCache)
-    let genreItems = []
-    booksToShow.map(b => b.genres.filter(g => genreItems.push(g)))
-    genres = [...new Set(genreItems)]
-  }
+  let genreItems = []
+  booksToShow.map(b => b.genres.filter(g => genreItems.push(g)))
+  genres = [...new Set(genreItems)]
 
   const options = genres.map(genre => {
     return {
@@ -61,6 +66,10 @@ const Books = (props) => {
     paddingRight: '10px'
   }
 
+  const alignRight = {
+    float: 'right'
+  }
+
   return (
     <div>
       <br />
@@ -72,18 +81,28 @@ const Books = (props) => {
         <tbody>
           <tr>
             <th style={padding}></th>
-            <th style={padding}>
+            <th style={padding}
+                data-toggle='tooltip' data-placement='top' title='author' aria-label='author'>
               author
             </th>
-            <th>
+            <th data-toggle='tooltip' data-placement='top' title='published' aria-label='published'>
               published
             </th>
           </tr>
           {booksToShow.map((b,v,i) =>
             <tr key={v}>
-              <td style={padding}><em>{b.title}</em></td>
-              <td style={padding}>{b.author.name}</td>
-              <td>{b.published}</td>
+              <td style={padding}
+                data-toggle='tooltip' data-placement='top' title={b.title} aria-label={b.title}>
+                <em>{b.title}</em>
+              </td>
+              <td style={padding}
+                data-toggle='tooltip' data-placement='top' title={b.author.name} aria-label={b.author.name}>
+                {b.author.name}
+              </td>
+              <td style={alignRight}
+                data-toggle='tooltip' data-placement='top' title={b.published} aria-label={b.published}>
+                {b.published}
+              </td>
             </tr>
             )
           }
@@ -92,12 +111,14 @@ const Books = (props) => {
       {genres.map((g,v,i) =>
           <Button genre={g} key={i.indexOf(g)} setGenre={props.setGenre} />
       )}
-      <button type='button' className='btn btn-primary'
-        onClick={() => props.setGenre('all')}
-        id='genre-button'
-        autoFocus
-      >all genres
-      </button>
+      {props.optedGenre !== 'all' &&
+        <button type='button' className='btn btn-primary'
+          onClick={() => props.setGenre('all')}
+          id='genre-button'
+          data-toggle='tooltip' data-placement='top' title='all genres' aria-label='all genres'
+        >all genres
+        </button>
+      }
       <br />
       <div>
       <br />

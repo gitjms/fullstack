@@ -26,10 +26,20 @@ const Authors = (props) => {
     <Togglable buttonLabel='Set birthyear' closeLabel='close' ref={birthyearFormRef}>
       <BirthyearForm
         authors={authors}
+        notify={props.notify}
         setError={props.notifyError}
+        setbirthdayCache={props.setbirthdayCache}
       />
     </Togglable>
   )
+
+  const padding = {
+    paddingRight: '10px'
+  }
+
+  const alignRight = {
+    float: 'right'
+  }
 
   return (
     <>
@@ -40,18 +50,28 @@ const Authors = (props) => {
           <tbody>
             <tr>
               <th></th>
-              <th>
+              <th style={padding}
+                data-toggle='tooltip' data-placement='top' title='born' aria-label='born'>
                 born
               </th>
-              <th>
+              <th data-toggle='tooltip' data-placement='top' title='books' aria-label='books'>
                 books
               </th>
             </tr>
             {authors.map(a =>
               <tr key={a.name}>
-                <td>{a.name}</td>
-                <td>{a.born}</td>
-                <td>{a.bookCount}</td>
+                <td style={padding}
+                  data-toggle='tooltip' data-placement='top' title={a.name} aria-label={a.name}>
+                  {a.name}
+                </td>
+                <td style={padding}
+                  data-toggle='tooltip' data-placement='top' title={a.born} aria-label={a.born}>
+                  {a.born}
+                </td>
+                <td style={alignRight}
+                  data-toggle='tooltip' data-placement='top' title={a.bookCount} aria-label={a.bookCount}>
+                  {a.bookCount}
+                </td>
               </tr>
             )}
           </tbody>

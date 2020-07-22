@@ -11,28 +11,15 @@ const BookForm = (props) => {
   const [genres, setGenres] = useState([])
 
   const [ addBook ] = useMutation(NEW_BOOK, {
-    refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ],
     onError: (error) => {
       props.notifyError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
     },
-    addBook: (store, response) => {
-      updateCacheWith(response.data.addBook)
-    }
+    update: (store, response) => {
+      console.log('update',response.data.addBook)
+      props.updateCacheWith(response.data.addBook)
+    },
+    refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ]
   })
-
-  const updateCacheWith = (addedBook) => {
-    const includedIn = (set, object) => 
-      set.map(p => p.id).includes(object.id)  
-
-    const dataInStore = props.client.readQuery({ query: ALL_BOOKS })
-    if (!includedIn(dataInStore.allBooks, addedBook)) {
-      props.client.writeQuery({
-        query: ALL_BOOKS,
-        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
-      })
-    }
-    props.setupdateCache(addedBook)
-  }
 
   if (!props.show) {
     return null
@@ -41,21 +28,20 @@ const BookForm = (props) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    if (title !== '' && author !== '' && published !== '') {
-      addBook({ variables: { title,author,published: Number(published),genres } })
-      console.log('add book...')
+    await addBook({ variables: { title,author,published: Number(published),genres } })
 
-      setTitle('')
-      setPublished('')
-      setAuthor('')
-      setGenres([])
-      setGenre('')
-    }
+    setTitle('')
+    setPublished('')
+    setAuthor('')
+    setGenres([])
+    setGenre('')
   }
 
   const addGenre = () => {
-    setGenres(genres.concat(genre))
-    setGenre('')
+    if (genre !== '') {
+      setGenres(genres.concat(genre))
+      setGenre('')
+    }
   }
 
   const width = {
@@ -64,14 +50,16 @@ const BookForm = (props) => {
 
   return (
     <div className='col-auto'>
-    <br />
-    <h2>add books</h2>
+      <br />
+      <h2>add book</h2>
+      <br />
       <form onSubmit={submit}>
         <div className='form-group'>
           <label style={width}>title:</label>
-          <input
+          <input autoFocus
             value={title}
             onChange={({ target }) => setTitle(target.value)}
+            data-toggle='tooltip' data-placement='top' title='set title' aria-label='set title'
           />
         </div>
         <div className='form-group'>
@@ -79,6 +67,7 @@ const BookForm = (props) => {
           <input
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
+            data-toggle='tooltip' data-placement='top' title='set author' aria-label='set author'
           />
         </div>
         <div className='form-group'>
@@ -87,21 +76,27 @@ const BookForm = (props) => {
             type='number'
             value={published}
             onChange={({ target }) => setPublished(target.value)}
+            data-toggle='tooltip' data-placement='top' title='set published' aria-label='set published'
           />
         </div>
         <div className='form-group'>
           <input
             value={genre}
             onChange={({ target }) => setGenre(target.value)}
+            data-toggle='tooltip' data-placement='top' title='set genre' aria-label='set genre'
           />
-          <button className='btn btn-primary' onClick={addGenre} type="button">
+          <button className='btn btn-primary' onClick={addGenre} type="button"
+            data-toggle='tooltip' data-placement='top' title='add genre' aria-label='add genre'>
             add genre
           </button>
         </div>
         <div>
           genres: {genres.join(' ')}
         </div>
-        <button className='btn btn-primary' type='submit'>create book</button>
+        <button className='btn btn-primary' type='submit'
+          data-toggle='tooltip' data-placement='top' title='submit' aria-label='submit'>
+          submit
+        </button>
       </form>
     </div>
   )

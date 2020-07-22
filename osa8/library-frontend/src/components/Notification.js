@@ -5,8 +5,19 @@ export const Notify = ({ message }) => {
     return null
   }
 
+  const messageStyle = {
+    color: 'green',
+    background: 'lightgray',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10
+  }
+
   return (
-    <div style={{ color: 'green' }}>
+    <div style={messageStyle}>
       {message}
     </div>
   )
@@ -17,8 +28,19 @@ export const NotifyError = ({ message }) => {
     return null
   }
 
+  const errorMessageStyle = {
+    color: 'rgb(255, 0, 0)',
+    background: 'lightgray',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10
+  }
+
   return (
-    <div style={{ color: 'red' }}>
+    <div style={errorMessageStyle}>
       {message}
     </div>
   )

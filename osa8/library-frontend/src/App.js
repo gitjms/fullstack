@@ -1,51 +1,77 @@
 import React, { useState, useEffect } from 'react'
-import { useApolloClient, useLazyQuery, useSubscription } from '@apollo/client'
+import { useApolloClient, useQuery, useLazyQuery, useSubscription } from '@apollo/client'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHome, faSignInAlt, faSignOutAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import BookForm from './components/BookForm'
+import Footer from './components/Footer'
 import { Notify, NotifyError } from './components/Notification'
 import LoginForm from './components/LoginForm'
+import UserForm from './components/UserForm'
 import Recommended from './components/Recommended'
-import { CURRENT_USER, FAVORITE_BOOKS, BOOK_ADDED } from './queries'//, AUTHOR_EDITED } from './queries'
+import { ALL_BOOKS, FAVORITE_BOOKS, BOOK_ADDED, CURRENT_USER } from './queries'
 
 const App = () => {
 
   const client = useApolloClient()
+  const allBooksResult = useQuery(ALL_BOOKS)
+
+  const [allBooks, setAllBooks] = useState([])
 
   const [token, setToken] = useState(localStorage.getItem('library-user-token'))
+
   const [message, setMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [page, setPage] = useState('authors')
-  const [optedGenre, setGenre] = useState('all')
+
   const [getFavoriteBooks, resultBooks] = useLazyQuery(FAVORITE_BOOKS) 
   const [favoriteBooks, setFavoriteBooks] = useState([])
-  const [getFavoriteGenre, resultUser] = useLazyQuery(CURRENT_USER) 
+
+  const [getUser, resultUser] = useLazyQuery(CURRENT_USER)
   const [favoriteGenre, setFavoriteGenre] = useState('')
-  const [updateCache, setupdateCache] = useState(null)
-  // const [birthdayCache, setbirthdayCache] = useState(null)
+
+  const [optedGenre, setGenre] = useState('all')
 
   useEffect(() => {
-    if (resultBooks.data && resultUser.data) {
-      setFavoriteBooks(resultBooks.data.favorites)
+    if (allBooksResult.data) {
+      setAllBooks(allBooksResult.data.allBooks)
+    }
+  }, [allBooksResult])
+
+  useEffect(() => {
+    if (resultUser.data) {
       setFavoriteGenre(resultUser.data.me.favoriteGenre)
     }
-  }, [resultBooks,resultUser])
+  }, [resultUser])
+
+  useEffect(() => {
+    if (resultBooks.data ) {
+      setFavoriteBooks(resultBooks.data.favorites)
+    }
+  }, [resultBooks])
+
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => 
+      set.map(p => p.id).includes(object.id)  
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }
+  }
 
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       const addedBook = subscriptionData.data.bookAdded
-      setupdateCache(addedBook)
+      updateCacheWith(addedBook)
+      console.log(subscriptionData)
       notify(`${addedBook.title} added`)
     }
   })
-
-  // useSubscription(AUTHOR_EDITED, {
-  //   onSubscriptionData: ({ subscriptionData }) => {
-  //     const editedAuthor = subscriptionData.data.authorEdited
-  //     setbirthdayCache(editedAuthor)
-  //     notify(`${editedAuthor.name} birthday modified`)
-  //   }
-  // })
 
   const notify = (message) => {
     setMessage(message)
@@ -67,32 +93,60 @@ const App = () => {
     client.resetStore()
   }
 
+  if (allBooksResult.loading)  {
+    return <div>loading...</div>
+  }
+
+  const padding = {
+    paddingRight: '5px'
+  }
+
   return (
     <>
       <nav id='nav' className='navbar navbar-light bg-light'>
-        <a className="navbar-brand" href='/'><strong>Bloglist</strong></a>
+        <a className="navbar-brand" href='/'
+          data-toggle='tooltip' data-placement='top' title='Bloglist home' aria-label='Bloglist home'>
+          <span style={padding}></span><FontAwesomeIcon icon={faHome}/><strong>Bloglist</strong></a>
         <div className='button-group'>
-          <button className='btn btn-primary' onClick={() => setPage('authors')}>authors</button>
-          <button className='btn btn-primary' onClick={() => setPage('books')}>books</button>
+          <button className='btn btn-primary' onClick={() => setPage('authors')}
+            data-toggle='tooltip' data-placement='top' title='authors' aria-label='authors'>
+            authors
+          </button>
+          <button className='btn btn-primary' onClick={() => setPage('books')}
+            data-toggle='tooltip' data-placement='top' title='books' aria-label='books'>
+            books
+          </button>
           {token &&
             <>
-              <button className='btn btn-primary' onClick={() => setPage('addBook')}>add book</button>
+              <button className='btn btn-primary' onClick={() => setPage('addBook')}
+                data-toggle='tooltip' data-placement='top' title='add book' aria-label='add book'>
+                add book
+              </button>
               <button className='btn btn-primary' onClick={() => {
+                getUser()
                 getFavoriteBooks()
-                getFavoriteGenre()
                 setPage('recommended')
-              }} id='recommends'>
+              }}
+              data-toggle='tooltip' data-placement='top' title='recommended' aria-label='recommended'>
                 recommended
               </button>
             </>
           }
           {!token
-            ? <button className='btn btn-primary' onClick={() => setPage('login')}>login</button>
-            : <button className='btn btn-primary' onClick={logout}>logout</button>
+            ? <><button className='btn btn-primary' onClick={() => setPage('login')}
+                data-toggle='tooltip' data-placement='top' title='sign in' aria-label='sign in'>
+                sign in<span style={padding}></span><FontAwesomeIcon icon={faSignInAlt}/>
+              </button>
+              <button className='btn btn-primary' onClick={() => setPage('createacc')}
+                data-toggle='tooltip' data-placement='top' title='sign up' aria-label='sign up'>
+                sign up<span style={padding}></span><FontAwesomeIcon icon={faUserPlus}/>
+              </button></>
+            : <button className='btn btn-primary' onClick={logout}
+                data-toggle='tooltip' data-placement='top' title='sign out' aria-label='sign out'>
+                sign out<span style={padding}></span><FontAwesomeIcon icon={faSignOutAlt}/></button>
           }
         </div>
       </nav>
-
 
       <div className='container'>
       <Notify message={message} />
@@ -101,8 +155,8 @@ const App = () => {
       <Authors
         show={page === 'authors'}
         notifyError={notifyError}
+        notify={notify}
         token={token}
-        client={client}
       />
 
       <Books
@@ -110,7 +164,7 @@ const App = () => {
         optedGenre={optedGenre}
         setGenre={setGenre}
         client={client}
-        updateCache={updateCache}
+        allBooks={allBooks}
       />
 
       {page === 'recommended' && favoriteBooks.length > 0 &&
@@ -122,16 +176,17 @@ const App = () => {
       }
 
       {page === 'recommended' && favoriteBooks.length === 0 &&
-        <div><br />no recommended books</div>
+        <div><br />loading...</div>
       }
 
       {page === 'addBook' &&
         <BookForm
           show={page === 'addBook'}
           setPage={setPage}
+          notify={notify}
           notifyError={notifyError}
           client={client}
-          setupdateCache={setupdateCache}
+          updateCacheWith={updateCacheWith}
         />
       }
 
@@ -142,6 +197,16 @@ const App = () => {
           setPage={setPage}
         />
       }
+
+      {page === 'createacc' &&
+        <UserForm
+          setToken={setToken}
+          notifyError={notifyError}
+          setPage={setPage}
+        />
+      }
+
+      <Footer /><br />
 
     </div>
     </>

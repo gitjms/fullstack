@@ -8,6 +8,7 @@ const Button = (props) => {
         props.setGenre(props.genre)
       }}
       id='genre-button'
+      data-toggle='tooltip' data-placement='top' title={props.genre} aria-label={props.genre}
     >
     {props.genre}
     </button>

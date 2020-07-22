@@ -24,12 +24,11 @@ const typeDefs = gql`
   type User {
     username: String!
     favoriteGenre: String!
-    id: ID!
+    passwordHash: String!
   }
   
   type Subscription {
     bookAdded: Book!
-    authorEdited: Author!
   }
   
   type Query {
@@ -46,7 +45,8 @@ const typeDefs = gql`
     createUser(
       username: String!
       favoriteGenre: String!
-    ): User
+      password: String!
+    ): Token
   
     login(
       username: String!

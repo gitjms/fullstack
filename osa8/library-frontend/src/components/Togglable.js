@@ -29,12 +29,18 @@ const Togglable = React.forwardRef((props, ref) => {
     <div className='btn-group' role='group'>
       <div style={hideWhenVisible}>
         <button className='btn btn-primary'type='submit'
-          onClick={toggleVisibility}>{props.buttonLabel}</button>
+          onClick={toggleVisibility}
+          data-toggle='tooltip' data-placement='top' title={props.buttonLabel} aria-label={props.buttonLabel}>
+          {props.buttonLabel}
+        </button>
       </div>
       <div style={showWhenVisible} className='togglableContent'>
         {props.children}
         <button className='btn btn-primary'type='submit'
-          onClick={toggleVisibility}>{props.closeLabel}</button>
+          onClick={toggleVisibility}
+          data-toggle='tooltip' data-placement='top' title={props.closeLabel} aria-label={props.closeLabel}>
+          {props.closeLabel}
+        </button>
       </div>
     </div>
   )

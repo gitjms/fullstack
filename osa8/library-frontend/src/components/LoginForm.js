@@ -18,13 +18,13 @@ const LoginForm = (props) => {
       props.setToken(token)
       localStorage.setItem('library-user-token', token)
     }
-  }, [result.data]) // eslint-disable-line
+  }, [result]) // eslint-disable-line
 
   const submit = async (event) => {
     event.preventDefault()
 
-    await login({  username, password })
-
+    await login({ variables: { username, password } })
+      
     props.setPage('authors')
   }
 
@@ -35,12 +35,14 @@ const LoginForm = (props) => {
   return (
     <div className='col-auto'>
       <br />
+      <h2>sign in</h2>
       <form onSubmit={submit}>
         <div className='form-group'>
           <label style={width}>username:</label>
-          <input
+          <input autoFocus
             value={username}
             onChange={({ target }) => setUsername(target.value)}
+            data-toggle='tooltip' data-placement='top' title='set username' aria-label='set username'
           />
         </div>
         <div className='form-group'>
@@ -49,10 +51,17 @@ const LoginForm = (props) => {
             type='password'
             value={password}
             onChange={({ target }) => setPassword(target.value)}
+            data-toggle='tooltip' data-placement='top' title='set password' aria-label='set password'
           />
         </div>
-        <button className='btn btn-primary' type='submit'>login</button>
-        <button className='btn btn-primary' type='button' onClick={() => props.setPage('authors')}>cancel</button>
+        <button className='btn btn-primary' type='submit'
+          data-toggle='tooltip' data-placement='top' title='login' aria-label='login'>
+          login
+        </button>
+        <button className='btn btn-primary' type='button' onClick={() => props.setPage('authors')}
+          data-toggle='tooltip' data-placement='top' title='cancel' aria-label='cancel'>
+          cancel
+        </button>
       </form>
     </div>
   )

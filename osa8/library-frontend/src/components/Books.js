@@ -3,6 +3,8 @@ import Select from 'react-select'
 import { useLazyQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 import Button from './Button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 const Books = (props) => {
 
@@ -10,8 +12,8 @@ const Books = (props) => {
     ALL_BOOKS, { variables: { genre: props.optedGenre } })
   const [genreBooks, setGenreBooks] = useState([])
 
-  const [getAllBooks, resultAllBooks] = useLazyQuery(ALL_BOOKS)
-  const [allBooks, setAllBooks] = useState([])
+  const [getUpdatedBooks, resultUpdatedBooks] = useLazyQuery(ALL_BOOKS)
+  const [updatedBooks, setUpdatedBooks] = useState([])
 
   useEffect(() => {
     if (resultBooks.data) {
@@ -20,31 +22,40 @@ const Books = (props) => {
   }, [resultBooks,props.optedGenre])
 
   useEffect(() => {
-    if (resultAllBooks.data) {
-      setAllBooks(resultAllBooks.data.allBooks)
-    }
-  }, [resultAllBooks])
-
-  useEffect(() => {
-    if (props.optedGenre === 'all') {
-      getAllBooks()
-    } else {
+    if (props.optedGenre !== 'all') {
       getGenreBooks()
     }
-  }, [getGenreBooks,getAllBooks,props.optedGenre])
+  }, [getGenreBooks,props.optedGenre])
+
+  useEffect(() => {
+    if (resultUpdatedBooks.data) {
+      setUpdatedBooks(resultUpdatedBooks.data.allBooks)
+    }
+  }, [resultUpdatedBooks])
+
+  useEffect(() => {
+    if (props.bookUpdateCache) {
+      getUpdatedBooks()
+    }
+  }, [getUpdatedBooks,props.bookUpdateCache])
 
   if (!props.show) {
     return null
   }
 
+  if (resultBooks.loading || resultUpdatedBooks.loading)  {
+    return <div className='container'><br /><br /><br /><center>
+      <FontAwesomeIcon icon={faSpinner} size='5x'/></center></div>
+  }
+
   let booksToShow = []
-  console.log('all',allBooks.lengt)
-  console.log(' props.', props.allBooks.lengt)
-  props.optedGenre === 'all'
-    ? allBooks.lengt > props.allBooks.lengt
-      ? booksToShow = allBooks
-      : booksToShow = props.allBooks
-    : booksToShow = genreBooks
+  if (props.optedGenre === 'all') {
+    props.bookUpdateCache === null
+      ? booksToShow = props.allBooks
+      : booksToShow = updatedBooks.concat(props.bookUpdateCache)
+  } else {
+    booksToShow = genreBooks
+  }
 
   let genres = []
   let genreItems = []

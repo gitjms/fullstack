@@ -20,18 +20,13 @@ const BirthyearForm = (props) => {
 
   const [ editAuthor ] = useMutation(EDIT_AUTHOR, {
     onError: (error) => {
-      props.setError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
+      props.setError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.message)
     },
-    editAuthor: (store, response) => {
-      const authorsInStore = store.readQuery({ query: ALL_AUTHORS })
-      store.writeQuery({
-        query: ALL_AUTHORS,
-        data: {
-          ...authorsInStore,
-          allAuthors: [ ...authorsInStore.allAuthors, response.data.editAuthor ]
-        }
-      })
-    }
+    update: (store, response) => {
+      props.updateAuthorCacheWith(response.data.editAuthor)
+      props.setAuthorupdateCache(response.data.editAuthor)
+    },
+    refetchQueries: [ { query: ALL_AUTHORS } ]
   })
 
   const submit = async (event) => {
@@ -39,7 +34,6 @@ const BirthyearForm = (props) => {
 
     if (author !== '' && born !== '') {
       editAuthor({ variables: { name: author, setBornTo: Number(born) } })
-      props.notify(`author ${author} modified`)
 
       setBirthyear('')
       setAuthor('')
@@ -61,7 +55,7 @@ const BirthyearForm = (props) => {
       <h3>set birthyear</h3>
       <form onSubmit={submit}>
         <div>
-          <Select
+          <Select className='form-control'
             value={author.value}
             options={options}
             onChange={authorChange}

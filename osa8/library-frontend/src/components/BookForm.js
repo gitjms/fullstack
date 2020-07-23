@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { NEW_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
+import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
 
 const BookForm = (props) => {
 
@@ -10,13 +10,12 @@ const BookForm = (props) => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
-  const [ addBook ] = useMutation(NEW_BOOK, {
+  const [ addBook ] = useMutation(ADD_BOOK, {
     onError: (error) => {
-      props.notifyError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
+      props.notifyError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.message)
     },
     update: (store, response) => {
-      console.log('update',response.data.addBook)
-      props.updateCacheWith(response.data.addBook)
+      props.updateBookCacheWith(response.data.addBook)
     },
     refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ]
   })
@@ -46,6 +45,10 @@ const BookForm = (props) => {
 
   const width = {
     width: '100px'
+  }
+
+  const fontStyle = {
+    fontFamily: 'Verdana, Geneva, Tahoma, sans-serif'
   }
 
   return (
@@ -90,7 +93,7 @@ const BookForm = (props) => {
             add genre
           </button>
         </div>
-        <div>
+        <div style={fontStyle}>
           genres: {genres.join(' ')}
         </div>
         <button className='btn btn-primary' type='submit'

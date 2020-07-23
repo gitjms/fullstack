@@ -1,6 +1,5 @@
 const {
-  UserInputError,
-  AuthenticationError
+  UserInputError, AuthenticationError, PubSub
 } = require('apollo-server')
 
 const bcrypt = require('bcrypt')
@@ -12,6 +11,8 @@ const Book = require('../models/book')
 const User = require('../models/user')
 
 const JWT_SECRET = config.SECRET
+
+const pubsub = new PubSub()
 
 const password_strength = (password) => {
   const strongRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})')
@@ -82,7 +83,7 @@ const password_strength = (password) => {
         })
 
         await user.save().catch(error => {
-            logger.error('error: ', error)
+            logger.error('error: ', error.message)
             throw new UserInputError(error.message, {
               invalidArgs: args,
             })
@@ -130,7 +131,7 @@ const password_strength = (password) => {
             try {
               await author.save()
             } catch (error) {
-              logger.error('error: ', error)
+              logger.error('error: ', error.message)
               throw new UserInputError(error.message, {
                 invalidArgs: args,
               })
@@ -149,7 +150,7 @@ const password_strength = (password) => {
             author.books = author.books.concat(newBook._id)
             await author.save()
           } catch (error) {
-            logger.error('error: ', error)
+            logger.error('error: ', error.message)
             throw new UserInputError(error.message, {
               invalidArgs: args,
             })
@@ -167,11 +168,15 @@ const password_strength = (password) => {
           throw new AuthenticationError("not authenticated")
         }
   
-        const author = await Author.findOne({ name: { $in: args.name }}).populate('books')
+        const author = await Author.findOne({ name: { $in: args.name }})
+
         if (author) {
           await Author.updateOne(author, { $set: { born: args.setBornTo }})
+          const editedAuthors = await Author.find({}).populate('books')
 
-          return Author.findOne({ name: { $in: args.name }}).populate('books')
+          pubsub.publish('AUTHOR_EDITED', { authorEdited: editedAuthors })
+
+          return editedAuthors
         } else {
           return null
         }
@@ -181,6 +186,10 @@ const password_strength = (password) => {
     Subscription: {
       bookAdded: {
         subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+      },
+
+      authorEdited: {
+        subscribe: () => pubsub.asyncIterator(['AUTHOR_EDITED'])
       }
     }
   }

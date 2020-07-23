@@ -18,6 +18,10 @@ const Recommended = (props) => {
     paddingRight: '5px'
   }
 
+  const fontStyle = {
+    fontFamily: 'Verdana, Geneva, Tahoma, sans-serif'
+  }
+
   return (
     <div>
       <br />
@@ -25,9 +29,9 @@ const Recommended = (props) => {
         recommendations
       </h2>
       <br />
-      <>books in your favorite genre<span style={rightPadding}></span>
+      <div style={fontStyle}>books in your favorite genre<span style={rightPadding}></span>
         <b data-toggle='tooltip' data-placement='top' title={props.favoriteGenre} aria-label={props.favoriteGenre}>
-          {props.favoriteGenre}:</b><br /><br /></>
+          {props.favoriteGenre}:</b><br /><br /></div>
       <table>
         <tbody>
           <tr>

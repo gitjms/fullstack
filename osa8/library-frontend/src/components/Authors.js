@@ -1,25 +1,20 @@
 import React, { useRef } from 'react'
-import { useQuery } from '@apollo/client'
-import { ALL_AUTHORS } from '../queries'
 import BirthyearForm from './BirthyearForm'
 import Togglable from './Togglable'
 
 const Authors = (props) => {
 
-  const result = useQuery(ALL_AUTHORS)
   const birthyearFormRef = useRef()
 
   if (!props.show) {
     return null
   }
 
-  if (result.loading)  {
-    return <div>loading...</div>
-  }
-
   let authors = []
-  if (result.data) {
-    authors = result.data.allAuthors
+  if(props.authorUpdateCache.length === 0) {
+    authors = props.allAuthors
+  } else {
+    authors = props.authorUpdateCache
   }
 
   const setBirthyear = () => (
@@ -28,7 +23,8 @@ const Authors = (props) => {
         authors={authors}
         notify={props.notify}
         setError={props.notifyError}
-        setbirthdayCache={props.setbirthdayCache}
+        updateAuthorCacheWith={props.updateAuthorCacheWith}
+        setAuthorupdateCache={props.setAuthorupdateCache}
       />
     </Togglable>
   )

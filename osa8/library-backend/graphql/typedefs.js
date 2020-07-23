@@ -29,6 +29,7 @@ const typeDefs = gql`
   
   type Subscription {
     bookAdded: Book!
+    authorEdited: [Author!]!
   }
   
   type Query {

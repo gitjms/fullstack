@@ -1,4 +1,4 @@
-const { ApolloServer, PubSub } = require('apollo-server')
+const { ApolloServer } = require('apollo-server')
 
 const jwt = require('jsonwebtoken')
 const config = require('./utils/config')
@@ -10,8 +10,6 @@ mongoose.set('useCreateIndex', true)
 
 const JWT_SECRET = config.SECRET
 const MONGODB_URI = config.MONGODB_URI
-
-const pubsub = new PubSub()
 
 logger.info('connecting to', MONGODB_URI)
 

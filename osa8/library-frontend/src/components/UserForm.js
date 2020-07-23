@@ -9,7 +9,10 @@ const UserForm = (props) => {
 
   const [ createUser, result ] = useMutation(SIGNUP, {
     onError: (error) => {
-      props.notifyError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.toString())
+      props.notifyError(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.message)
+      if (!result.data) {
+        window.alert(error.message)
+      }
     }
   })
 

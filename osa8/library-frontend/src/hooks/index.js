@@ -19,3 +19,20 @@ export const useField = (form) => {
     onReset
   }
 }
+
+export const useData = (form) => {
+  const [value, setValue] = useState('')
+  console.log('form',form)
+
+  const onChange = (event) => {
+    console.log('event',event)
+    form
+      ? setValue(event.target.value)
+      : setValue('')
+  }
+
+  return {
+    value,
+    onChange
+  }
+}

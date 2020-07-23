@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useApolloClient, useQuery, useLazyQuery, useSubscription } from '@apollo/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome, faSignInAlt, faSignOutAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faSignInAlt, faSignOutAlt, faUserPlus, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import BookForm from './components/BookForm'
@@ -10,13 +10,15 @@ import { Notify, NotifyError } from './components/Notification'
 import LoginForm from './components/LoginForm'
 import UserForm from './components/UserForm'
 import Recommended from './components/Recommended'
-import { ALL_BOOKS, FAVORITE_BOOKS, BOOK_ADDED, CURRENT_USER } from './queries'
+import { ALL_BOOKS, ALL_AUTHORS, FAVORITE_BOOKS, BOOK_ADDED, AUTHOR_EDITED, CURRENT_USER } from './queries'
 
 const App = () => {
 
   const client = useApolloClient()
+  const allAuthorsResult = useQuery(ALL_AUTHORS)
   const allBooksResult = useQuery(ALL_BOOKS)
 
+  const [allAuthors, setAllAuthors] = useState([])
   const [allBooks, setAllBooks] = useState([])
 
   const [token, setToken] = useState(localStorage.getItem('library-user-token'))
@@ -32,6 +34,14 @@ const App = () => {
   const [favoriteGenre, setFavoriteGenre] = useState('')
 
   const [optedGenre, setGenre] = useState('all')
+  const [bookUpdateCache, setBookupdateCache] = useState(null)
+  const [authorUpdateCache, setAuthorupdateCache] = useState([])
+
+  useEffect(() => {
+    if (allAuthorsResult.data) {
+      setAllAuthors(allAuthorsResult.data.allAuthors)
+    }
+  }, [allAuthorsResult])
 
   useEffect(() => {
     if (allBooksResult.data) {
@@ -51,7 +61,7 @@ const App = () => {
     }
   }, [resultBooks])
 
-  const updateCacheWith = (addedBook) => {
+  const updateBookCacheWith = (addedBook) => {
     const includedIn = (set, object) => 
       set.map(p => p.id).includes(object.id)  
 
@@ -64,12 +74,29 @@ const App = () => {
     }
   }
 
+  const updateAuthorCacheWith = (editedAuthors) => {
+    client.writeQuery({
+      query: ALL_AUTHORS,
+      data: { allAuthors : editedAuthors }
+    })
+  }
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       const addedBook = subscriptionData.data.bookAdded
-      updateCacheWith(addedBook)
-      console.log(subscriptionData)
+      updateBookCacheWith(addedBook)
+      setBookupdateCache(addedBook)
+      setAllBooks(allBooks.concat(addedBook))
       notify(`${addedBook.title} added`)
+    }
+  })
+
+  useSubscription(AUTHOR_EDITED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const editedAuthor = subscriptionData.data.authorEdited
+      updateAuthorCacheWith(editedAuthor)
+      setAuthorupdateCache(editedAuthor)
+      notify(`author birthyear edited`)
     }
   })
 
@@ -83,24 +110,25 @@ const App = () => {
   const notifyError = (errorMessage) => {
     setErrorMessage(errorMessage)
     setTimeout(() => {
-      setMessage(null)
+      setErrorMessage(null)
     }, 10000)
   }
 
   const logout = () => {
-    setToken(null)
+    setPage('authors')
     localStorage.clear()
-    client.resetStore()
+    setToken(null)
   }
 
-  if (allBooksResult.loading)  {
-    return <div>loading...</div>
+  if (allBooksResult.loading || resultUser.loading || resultBooks.loading)  {
+    return <div className='container'><br /><br /><br /><center>
+      <FontAwesomeIcon icon={faSpinner} size='5x'/></center></div>
   }
 
   const padding = {
     paddingRight: '5px'
   }
-
+  
   return (
     <>
       <nav id='nav' className='navbar navbar-light bg-light'>
@@ -157,6 +185,10 @@ const App = () => {
         notifyError={notifyError}
         notify={notify}
         token={token}
+        allAuthors={allAuthors}
+        updateAuthorCacheWith={updateAuthorCacheWith}
+        setAuthorupdateCache={setAuthorupdateCache}
+        authorUpdateCache={authorUpdateCache}
       />
 
       <Books
@@ -165,6 +197,8 @@ const App = () => {
         setGenre={setGenre}
         client={client}
         allBooks={allBooks}
+        bookUpdateCache={bookUpdateCache}
+        setBookupdateCache={setBookupdateCache}
       />
 
       {page === 'recommended' && favoriteBooks.length > 0 &&
@@ -186,7 +220,7 @@ const App = () => {
           notify={notify}
           notifyError={notifyError}
           client={client}
-          updateCacheWith={updateCacheWith}
+          updateBookCacheWith={updateBookCacheWith}
         />
       }
 

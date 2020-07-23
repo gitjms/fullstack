@@ -118,7 +118,7 @@ const App = () => {
     setPage('authors')
     setToken(null)
     localStorage.clear()
-    client.clearStore()//.resetStore()
+    client.clearStore()
   }
 
   if (allAuthorsResult.loading || allBooksResult.loading || resultUser.loading || resultBooks.loading)  {

@@ -50,7 +50,7 @@ const App = () => {
   }, [allBooksResult])
 
   useEffect(() => {
-    if (resultUser.data) {
+    if (resultUser.data && resultUser.data.me) {
       setFavoriteGenre(resultUser.data.me.favoriteGenre)
     }
   }, [resultUser])
@@ -116,11 +116,12 @@ const App = () => {
 
   const logout = () => {
     setPage('authors')
-    localStorage.clear()
     setToken(null)
+    localStorage.clear()
+    client.clearStore()//.resetStore()
   }
 
-  if (allBooksResult.loading || resultUser.loading || resultBooks.loading)  {
+  if (allAuthorsResult.loading || allBooksResult.loading || resultUser.loading || resultBooks.loading)  {
     return <div className='container'><br /><br /><br /><center>
       <FontAwesomeIcon icon={faSpinner} size='5x'/></center></div>
   }
@@ -201,16 +202,12 @@ const App = () => {
         setBookupdateCache={setBookupdateCache}
       />
 
-      {page === 'recommended' && favoriteBooks.length > 0 &&
+      {page === 'recommended' &&
         <Recommended
           show={page === 'recommended'}
           favoriteBooks={favoriteBooks}
           favoriteGenre={favoriteGenre}
         />
-      }
-
-      {page === 'recommended' && favoriteBooks.length === 0 &&
-        <div><br />loading...</div>
       }
 
       {page === 'addBook' &&

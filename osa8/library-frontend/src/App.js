@@ -123,7 +123,7 @@ const App = () => {
 
   if (allAuthorsResult.loading || allBooksResult.loading || resultUser.loading || resultBooks.loading)  {
     return <div className='container'><br /><br /><br /><center>
-      <FontAwesomeIcon icon={faSpinner} size='5x'/></center></div>
+      <FontAwesomeIcon icon={faSpinner} size='5x' spin /></center></div>
   }
 
   const padding = {

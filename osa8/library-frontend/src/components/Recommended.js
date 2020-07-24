@@ -25,7 +25,7 @@ const Recommended = (props) => {
   return (
     <div>
       <br />
-      <h2 data-toggle='tooltip' data-placement='top' title='recommendations' aria-label='recommendations'>
+      <h2 data-toggle='tooltip' data-placement='top' title='recommendations page' aria-label='recommendations page'>
         recommendations
       </h2>
       <br />

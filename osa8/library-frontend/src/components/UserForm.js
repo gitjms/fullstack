@@ -45,7 +45,9 @@ const UserForm = (props) => {
   return (
     <div className='col-auto'>
       <br />
-      <h2>create account</h2>
+      <h2 data-toggle='tooltip' data-placement='top' title='create account page' aria-label='create account page'>
+        create account
+      </h2>
       <form onSubmit={submit}>
         <div className='form-group'>
           <label style={width}>username:</label>
@@ -72,11 +74,11 @@ const UserForm = (props) => {
             data-toggle='tooltip' data-placement='top' title='set password' aria-label='set password'
           />
         </div>
-        <button className='btn btn-primary' type='submit'
+        <button className='btn btn-raised btn-primary mr-1' type='submit'
           data-toggle='tooltip' data-placement='top' title='submit' aria-label='submit'>
           submit
         </button>
-        <button className='btn btn-primary' type='button' onClick={() => props.setPage('authors')}
+        <button className='btn btn-raised btn-primary' type='button' onClick={() => props.setPage('authors')}
           data-toggle='tooltip' data-placement='top' title='cancel' aria-label='cancel'>
           cancel
         </button>

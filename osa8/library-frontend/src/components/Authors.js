@@ -41,7 +41,9 @@ const Authors = (props) => {
     <>
       <div>
         <br />
-        <h2>authors</h2>
+        <h2 data-toggle='tooltip' data-placement='top' title='authors page' aria-label='authors page'>
+          authors
+        </h2>
         <table>
           <tbody>
             <tr>

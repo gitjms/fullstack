@@ -137,21 +137,21 @@ const App = () => {
           data-toggle='tooltip' data-placement='top' title='Bloglist home' aria-label='Bloglist home'>
           <span style={padding}></span><FontAwesomeIcon icon={faHome}/><strong>Bloglist</strong></a>
         <div className='button-group'>
-          <button className='btn btn-primary' onClick={() => setPage('authors')}
+          <button className='btn btn-raised btn-warning mr-1' onClick={() => setPage('authors')}
             data-toggle='tooltip' data-placement='top' title='authors' aria-label='authors'>
             authors
           </button>
-          <button className='btn btn-primary' onClick={() => setPage('books')}
+          <button className='btn btn-raised btn-warning mr-1' onClick={() => setPage('books')}
             data-toggle='tooltip' data-placement='top' title='books' aria-label='books'>
             books
           </button>
           {token &&
             <>
-              <button className='btn btn-primary' onClick={() => setPage('addBook')}
+              <button className='btn btn-raised btn-warning mr-1' onClick={() => setPage('addBook')}
                 data-toggle='tooltip' data-placement='top' title='add book' aria-label='add book'>
                 add book
               </button>
-              <button className='btn btn-primary' onClick={() => {
+              <button className='btn btn-raised btn-warning mr-1' onClick={() => {
                 getUser()
                 getFavoriteBooks()
                 setPage('recommended')
@@ -162,15 +162,15 @@ const App = () => {
             </>
           }
           {!token
-            ? <><button className='btn btn-primary' onClick={() => setPage('login')}
+            ? <><button className='btn btn-raised btn-primary mr-1' onClick={() => setPage('login')}
                 data-toggle='tooltip' data-placement='top' title='sign in' aria-label='sign in'>
                 sign in<span style={padding}></span><FontAwesomeIcon icon={faSignInAlt}/>
               </button>
-              <button className='btn btn-primary' onClick={() => setPage('createacc')}
+              <button className='btn btn-raised btn-primary' onClick={() => setPage('createacc')}
                 data-toggle='tooltip' data-placement='top' title='sign up' aria-label='sign up'>
                 sign up<span style={padding}></span><FontAwesomeIcon icon={faUserPlus}/>
               </button></>
-            : <button className='btn btn-primary' onClick={logout}
+            : <button className='btn btn-raised btn-primary' onClick={logout}
                 data-toggle='tooltip' data-placement='top' title='sign out' aria-label='sign out'>
                 sign out<span style={padding}></span><FontAwesomeIcon icon={faSignOutAlt}/></button>
           }

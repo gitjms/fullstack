@@ -52,7 +52,9 @@ const BirthyearForm = (props) => {
   return (
     <div>
       <br />
-      <h3>set birthyear</h3>
+      <h3 data-toggle='tooltip' data-placement='top' title='set birthyear' aria-label='set birthyear'>
+        set birthyear
+      </h3>
       <form onSubmit={submit}>
         <div>
           <Select className='form-control'
@@ -70,7 +72,7 @@ const BirthyearForm = (props) => {
             onChange={({ target }) => setBirthyear(target.value)}
             data-toggle='tooltip' data-placement='top' title='set birthyear' aria-label='set birthyear'
           />
-          <button className='btn btn-primary' type='submit'
+          <button className='btn btn-raised btn-primary ml-2' type='submit'
             data-toggle='tooltip' data-placement='top' title='update author' aria-label='update author'>
             update author
           </button>

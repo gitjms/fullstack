@@ -84,7 +84,9 @@ const Books = (props) => {
   return (
     <div>
       <br />
-      <h2>books</h2>
+      <h2 data-toggle='tooltip' data-placement='top' title='books page' aria-label='books page'>
+        books
+      </h2>
       {props.optedGenre !== 'all' &&
         <>in genre <b>{props.optedGenre}</b><br /><br /></>
       }
@@ -123,7 +125,7 @@ const Books = (props) => {
           <Button genre={g} key={i.indexOf(g)} setGenre={props.setGenre} />
       )}
       {props.optedGenre !== 'all' &&
-        <button type='button' className='btn btn-primary'
+        <button type='button' className='btn btn-raised btn-primary mr-1'
           onClick={() => props.setGenre('all')}
           id='genre-button'
           data-toggle='tooltip' data-placement='top' title='all genres' aria-label='all genres'

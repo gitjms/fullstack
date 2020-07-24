@@ -54,7 +54,9 @@ const BookForm = (props) => {
   return (
     <div className='col-auto'>
       <br />
-      <h2>add book</h2>
+      <h2 data-toggle='tooltip' data-placement='top' title='add book page' aria-label='add book page'>
+        add book
+      </h2>
       <br />
       <form onSubmit={submit}>
         <div className='form-group'>
@@ -88,7 +90,7 @@ const BookForm = (props) => {
             onChange={({ target }) => setGenre(target.value)}
             data-toggle='tooltip' data-placement='top' title='set genre' aria-label='set genre'
           />
-          <button className='btn btn-primary' onClick={addGenre} type="button"
+          <button className='btn btn-raised btn-primary ml-2' onClick={addGenre} type="button"
             data-toggle='tooltip' data-placement='top' title='add genre' aria-label='add genre'>
             add genre
           </button>
@@ -96,7 +98,7 @@ const BookForm = (props) => {
         <div style={fontStyle}>
           genres: {genres.join(' ')}
         </div>
-        <button className='btn btn-primary' type='submit'
+        <button className='btn btn-raised btn-primary' type='submit'
           data-toggle='tooltip' data-placement='top' title='submit' aria-label='submit'>
           submit
         </button>

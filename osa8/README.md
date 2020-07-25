@@ -1,4 +1,4 @@
-# GraphQL Library
+# GraphQL Library App
 
 ## Available Scripts
 
@@ -6,21 +6,19 @@ In the project directory **library-backend**, run:
 
 ### `npm run dev`
 
-Runs the app in the development mode and the page will reload if you make edits.<br />
+Runs the app in the development mode and the page will reload if you make edits
 
 or
 
 ### `npm run start`
 
-Runs the app in the production mode.<br />
+Runs the app in the production mode.
 
 In the project directory **library-frontend**, run:
 
 ### `npm start`
 
 Open [http://localhost:4000](http://localhost:4000) to view it in the browser.
-
-### `build:ui`, `deploy`, `deploy:full`, `logs:prod`
 
 ## App in Heroku
 
@@ -44,6 +42,8 @@ Otherwise the app works. You can:
 * get recommendations according to your favorite genre
 * modify author's birthyear
 * add books
+
+This version is not the same as the one in the GitHub repository.
 
 ---
 

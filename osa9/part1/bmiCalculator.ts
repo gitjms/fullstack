@@ -1,9 +1,31 @@
-import { parseTwoNumbers } from './utils/index';
+type Result = OutputResult | OutputError;
 
-const calculateBmi = (a: number, b: number): string => {
-  if (a === 0) throw new Error('Height cannot be 0!');
+interface OutputResult {
+  weight: number;
+  height: number;
+  bmi: string;
+}
 
-  const bmi = b / (a/100)**2;
+interface OutputError {
+  error: string;
+}
+
+export const parseTwoNumbers = (height: number, weight: number): Result => {
+  if (Number(height) === 0) {
+    return {
+      error: 'height cannot be 0'
+    };
+  } else {
+    return {
+      weight: Number(weight),
+      height: Number(height),
+      bmi: calculateBmi(Number(height), Number(weight))
+    };
+  }
+};
+
+const calculateBmi = (height: number, weight: number): string => {
+  const bmi = weight / (height/100)**2;
   if (bmi <= 15) {
     return 'Very severely underweight';
   } else if (bmi <= 16) {
@@ -23,20 +45,19 @@ const calculateBmi = (a: number, b: number): string => {
   } else {
     throw new Error('Could not calculate bmi'); 
   }
-}
+};
 
-export default function getBmi(args: Array<string>) {
-  try {
-    const { value1, value2 } = parseTwoNumbers(args);
+export default function getBmi(height: string, weight: string): Result {
+  if ( height === 'undefined' || weight === 'undefined') {
     return {
-      weight: value1,
-      height: value2,
-      bmi: calculateBmi(value1, value2)
+      error: 'parameters missing'
     };
-  } catch (e) {
+  } else if (isNaN(Number(height)) || isNaN(Number(weight))) {
     return {
-      error: "malformatted parameters"
-    }
+      error: 'malformatted parameters'
+    };
+  } else {
+    return parseTwoNumbers(Number(height),Number(weight));
   }
 }
 

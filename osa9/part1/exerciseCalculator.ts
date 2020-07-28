@@ -1,6 +1,6 @@
-import { parseArrayArguments } from './utils/index';
+type Result = OutputResult | OutputError;
 
-interface exerciseResult {
+interface OutputResult {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -10,10 +10,28 @@ interface exerciseResult {
   average: number;
 }
 
-const calculateExcercises = (array: Array<number>, target: number): exerciseResult => {
-  const allDays = array.length;
-  const workDays = array.filter(e => e > 0).length;
-  const sumHours = array.reduce((s,e) => s + e);
+interface OutputError {
+  error: string;
+}
+
+export default function getExercise(daily_exercises: Array<number>, target: number): Result {
+  if ( daily_exercises.length === 0) {
+    return {
+      error: 'Not enough arguments'
+    };
+  }
+
+  if (!isNaN(target) && daily_exercises.every(e => !isNaN(e))) {
+    return calculate(daily_exercises, target);
+  } else {
+    throw new Error('Provided values were not numbers!');
+  }
+}
+
+const calculate = (daily_exercises: Array<number>, target: number): Result => {
+  const allDays = daily_exercises.length;
+  const workDays = daily_exercises.filter(e => e > 0).length;
+  const sumHours = daily_exercises.reduce((s,e) => s + e);
   const avg = sumHours / allDays;
   let rate;
   let rateText;
@@ -25,7 +43,7 @@ const calculateExcercises = (array: Array<number>, target: number): exerciseResu
     rateText = 'Not too bad but could be better.';
   } else {
     rate = 3;
-    rateText = 'This will do. For now.';
+    rateText = 'This will do.';
   }
   return {
     periodLength: allDays,
@@ -35,13 +53,5 @@ const calculateExcercises = (array: Array<number>, target: number): exerciseResu
     ratingDescription: rateText,
     target: target,
     average: avg
-  }
-}
-
-try {
-  const { array, target } = parseArrayArguments(process.argv);
-  console.log(calculateExcercises(array, target));
-} catch (e) {
-  console.log('Error, something bad happened, message: ', e.message);
-}
-
+  };
+};

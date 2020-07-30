@@ -30,10 +30,10 @@ const parseToDate = (param: any, paramName: string): string => {
 };
 
 const parseGender = (gender: any): Gender => {
-  if (!gender || !isGender(gender)) {
-      throw new Error('Incorrect or missing gender: ' + String(gender));
+  if (!gender || !isString(gender) || !isGender(gender.toLowerCase())) {
+      throw new Error(`Incorrect or missing gender: ${String(gender) || ""}`);
   }
-  return gender;
+  return gender.toLowerCase() as Gender;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

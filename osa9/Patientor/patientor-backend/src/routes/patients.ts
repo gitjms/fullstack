@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Router } from 'express';
 import patientService from '../services/patientService';
 import toNewPatient from '../utils';
@@ -20,17 +21,21 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  try {
-    const newPatient = toNewPatient(req.body);
-    // res.json(req.body);
-    // const { name, dateOfBirth, ssn, gender, occupation } = toNewPatient(req.body);
-
-    const addedPatient = patientService.addPatient(newPatient);
-    res.json(addedPatient);
-  } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    res.status(400).send(e.message);
-    // res.status(400).json({ error: e.message });
+  const query = JSON.stringify(req.query);
+  const body = JSON.stringify(req.body);
+  let newPatient;
+  if (query === '{}' && body === '{}' || req.query === undefined) {
+    res.status(400).send('request undefined');
+  } else {
+    query !== '{}'
+      ? newPatient = toNewPatient(req.query)
+      : newPatient = toNewPatient(req.body);
+    try {
+      const addedPatient = patientService.addPatient(newPatient);
+      res.json(addedPatient);
+    } catch (e) {
+      res.status(400).send(e.message);
+    }
   }
 });
 

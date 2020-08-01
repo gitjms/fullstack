@@ -1,4 +1,5 @@
 /node_modules
+/ilaris-flight-diaries
 package-lock.json
 .vscode
 .DS_Store

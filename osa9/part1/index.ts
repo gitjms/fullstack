@@ -8,7 +8,6 @@ import getExercise from './exerciseCalculator';
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-// app.use(express.json());
 
 type Input = {
   daily_exercises: Array<number>,
@@ -57,10 +56,7 @@ app.get('/calculate', (req, res) => {
 });
 
 app.get('/hello', (_req, res) => {
-  const htmlResponse = `<p>Hello Full Stack</p>
-  <p><strong>BMI Usage:</strong> GET /bmi?height=180&weight=72</p>
-  <p><strong>exercises Usage:</strong> POST /exercises
-  {"dailyExercises": [1, 0, 2, 0, 3, 0, 2.5], "target": 2}</p>`;
+  const htmlResponse = '<p>Hello Full Stack</p>';
   res.send(htmlResponse);
 });
 
@@ -68,5 +64,4 @@ const PORT = 3002;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Open page 'http://localhost:${PORT}'`);
 });

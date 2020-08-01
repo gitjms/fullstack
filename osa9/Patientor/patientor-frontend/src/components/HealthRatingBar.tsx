@@ -13,7 +13,7 @@ const HEALTHBAR_TEXTS = [
   'The patient has a diagnosed condition',
 ];
 
-const HealthRatingBar = ({ rating, showText }: BarProps) => {
+const HealthRatingBar = ({ rating, showText }: BarProps): JSX.Element => {
   return (
     <div className="health-bar">
       {<Rating icon="heart" disabled rating={4 - rating} maxRating={4} />}

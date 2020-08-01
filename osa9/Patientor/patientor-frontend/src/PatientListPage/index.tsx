@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from "react";
 import axios from "axios";
+import { Link, Switch, Route } from "react-router-dom";
 import { Container, Table, Button } from "semantic-ui-react";
 
 import { PatientFormValues } from "../AddPatientModal/AddPatientForm";
@@ -7,13 +9,20 @@ import AddPatientModal from "../AddPatientModal";
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
-import { useStateValue } from "../state";
+import PatientPage from "../PatientPage/index";
+import { useStateValue, addPatient } from "../state";
 
-const PatientListPage: React.FC = () => {
+interface Props {
+  listvisible: boolean;
+  setlistvisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const PatientListPage: React.FC<Props> = ({ listvisible, setlistvisible }: Props) => {
   const [{ patients }, dispatch] = useStateValue();
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
+  const hideOrShow = { display: listvisible ? '' : 'none' };
 
   const openModal = (): void => setModalOpen(true);
 
@@ -28,7 +37,7 @@ const PatientListPage: React.FC = () => {
         `${apiBaseUrl}/patients`,
         values
       );
-      dispatch({ type: "ADD_PATIENT", payload: newPatient });
+      dispatch(addPatient(newPatient));
       closeModal();
     } catch (e) {
       console.error(e.response.data);
@@ -39,9 +48,9 @@ const PatientListPage: React.FC = () => {
   return (
     <div className="App">
       <Container textAlign="center">
-        <h3>Patient list</h3>
+        <h3 style={hideOrShow}>Patient list</h3>
       </Container>
-      <Table celled>
+      <Table celled style={hideOrShow}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Name</Table.HeaderCell>
@@ -51,11 +60,18 @@ const PatientListPage: React.FC = () => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {Object.values(patients).map((patient: Patient) => (
-            <Table.Row key={patient.id}>
-              <Table.Cell>{patient.name}</Table.Cell>
-              <Table.Cell>{patient.gender}</Table.Cell>
-              <Table.Cell>{patient.occupation}</Table.Cell>
+          {Object.values(patients).map((patient: Patient | undefined) => (
+            <Table.Row key={patient?.id}>
+            {patient &&
+              <Table.Cell>
+                <Link to={`/patients/${patient.id}`}
+                  onClick={() => setlistvisible(false)}
+                >
+                  {patient?.name}
+                </Link>
+              </Table.Cell>}
+              <Table.Cell>{patient?.gender}</Table.Cell>
+              <Table.Cell>{patient?.occupation}</Table.Cell>
               <Table.Cell>
                 <HealthRatingBar showText={false} rating={1} />
               </Table.Cell>
@@ -63,13 +79,18 @@ const PatientListPage: React.FC = () => {
           ))}
         </Table.Body>
       </Table>
+
       <AddPatientModal
         modalOpen={modalOpen}
         onSubmit={submitNewPatient}
         error={error}
         onClose={closeModal}
       />
-      <Button onClick={() => openModal()}>Add New Patient</Button>
+      <Button onClick={() => openModal()} style={hideOrShow}>Add New Patient</Button>
+
+      <Switch>
+        <Route path={'/patients/:id'}><PatientPage {...{ listvisible }}/></Route>
+      </Switch>
     </div>
   );
 };

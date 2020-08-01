@@ -27,7 +27,7 @@ const password_strength = (password) => {
   }
 }
 
-  const resolvers = {
+export const resolvers = {
     Query: {
       bookCount: () => Book.collection.countDocuments(),
       authorCount: () => Author.collection.countDocuments(),
@@ -193,5 +193,3 @@ const password_strength = (password) => {
       }
     }
   }
-
-  module.exports = resolvers

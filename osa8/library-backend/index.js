@@ -1,3 +1,4 @@
+import { typedefs, resolvers } from "./schema";
 const { ApolloServer } = require('apollo-server')
 
 const jwt = require('jsonwebtoken')
@@ -21,8 +22,8 @@ mongoose.connect( MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true
     console.log('error connecting to MongoDB:', error.message)
   })
 
-const typeDefs = require('./graphql/typedefs')
-const resolvers = require('./graphql/resolvers')
+// const typeDefs = require('./graphql/typedefs')
+// const resolvers = require('./graphql/resolvers')
 
 const server = new ApolloServer({
   typeDefs,
